@@ -2,6 +2,8 @@
 #include "MemoryManagement/MemoryManager.h"
 #include "MemoryManagement/FreeAllocationHeap.h"
 
+CMemoryManager* CMemoryManager::sm_pInstance = nullptr;
+
 CMemoryManager* CMemoryManager::GetInstance()
 {
 	if (sm_pInstance == nullptr)
