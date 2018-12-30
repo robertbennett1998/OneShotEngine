@@ -19,4 +19,10 @@
 	#define ONE_SHOT_CORE_DLL __declspec(dllimport)
 #endif
 
+#include <MemoryManagement/MemoryManager.h>
+#include <Logging/LoggingManager.h>
+#include <Logging/Logger.h>
+#include <FileUtillities/VirtualFileSystem.h>
+#include <Time/Stopwatch.h>
+
 #endif

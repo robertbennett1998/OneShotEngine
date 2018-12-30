@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OneShotCore", "OneShotCore\OneShotCore.vcxproj", "{6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OneShotCore_Testing", "OneShotCore_Testing\OneShotCore_Testing.vcxproj", "{335AE50F-B739-48DE-982C-D524F1BAB9D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD} = {6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +26,14 @@ Global
 		{6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD}.Release|x64.Build.0 = Release|x64
 		{6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD}.Release|x86.ActiveCfg = Release|Win32
 		{6EEB966D-91DC-4BBC-9C3F-802E7CCDD7AD}.Release|x86.Build.0 = Release|Win32
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Debug|x64.ActiveCfg = Debug|x64
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Debug|x64.Build.0 = Debug|x64
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Debug|x86.ActiveCfg = Debug|Win32
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Debug|x86.Build.0 = Debug|Win32
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Release|x64.ActiveCfg = Release|x64
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Release|x64.Build.0 = Release|x64
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Release|x86.ActiveCfg = Release|Win32
+		{335AE50F-B739-48DE-982C-D524F1BAB9D5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

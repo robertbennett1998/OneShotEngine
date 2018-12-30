@@ -39,8 +39,8 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 
 #pragma region Memory Management Macros and Overloads
 #define EXPAND(x) x
-#define GET_GE_NEW_MACRO(_1,_2,NAME,...) NAME
-#define GET_GE_NEW_ARRAY_MACRO(_1,_2,_3,NAME,...) NAME
+#define GET_OSE_NEW_MACRO(_1,_2,NAME,...) NAME
+#define GET_OSE_NEW_ARRAY_MACRO(_1,_2,_3,NAME,...) NAME
 
 #ifdef _DEBUG
 	//forces a class to be allocated on a specific heap
@@ -59,27 +59,27 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 				throw; \
 			return pHeap->Allocate(szSize, iLine, pFile); \
 		}
-	#define GE_NEW_1(x) new(__LINE__, __FILE__) x
-	#define GE_NEW_2(x, heap) new(__LINE__, __FILE__, heap) x
-	#define GE_NEW(...) EXPAND(GET_GE_NEW_MACRO(__VA_ARGS__, GE_NEW_2, GE_NEW_1)(__VA_ARGS__))	
-	#define GE_NEW_ARRAY_2(x, count) new(__LINE__, __FILE__) x[count]
-	#define GE_NEW_ARRAY_3(x, count, heap) new(__LINE__, __FILE__, heap) x[count]
-	#define GE_NEW_ARRAY(...) EXPAND(GET_GE_NEW_ARRAY_MACRO(__VA_ARGS__, GE_NEW_ARRAY_3, GE_NEW_ARRAY_2)(__VA_ARGS__))
+	#define OSE_NEW_1(x) new(__LINE__, __FILE__) x
+	#define OSE_NEW_2(x, heap) new(__LINE__, __FILE__, heap) x
+	#define OSE_NEW(...) EXPAND(GET_OSE_NEW_MACRO(__VA_ARGS__, OSE_NEW_2, OSE_NEW_1)(__VA_ARGS__))	
+	#define OSE_NEW_ARRAY_2(x, count) new(__LINE__, __FILE__) x[count]
+	#define OSE_NEW_ARRAY_3(x, count, heap) new(__LINE__, __FILE__, heap) x[count]
+	#define OSE_NEW_ARRAY(...) EXPAND(GET_OSE_NEW_ARRAY_MACRO(__VA_ARGS__, OSE_NEW_ARRAY_3, OSE_NEW_ARRAY_2)(__VA_ARGS__))
 	//this is literally only there for consistency
-	#define GE_DELETE(x) delete x
-	#define GE_DELETE_ARRAY(x) delete[] x
+	#define OSE_DELETE(x) delete x
+	#define OSE_DELETE_ARRAY(x) delete[] x
 #else
 	//currently does nothing in non debug mode	
 	#define ALLOCATE_ON_HEAP(heapName)
-	#define GE_NEW_1(x) new x
-	#define GE_NEW_2(x, heap) new(heap) x
-	#define GE_NEW(...) EXPAND(GET_GE_NEW_MACRO(__VA_ARGS__, GE_NEW_2, GE_NEW_1)(__VA_ARGS__))
-	#define GE_NEW_ARRAY_2(x, count) new x[count]
-	#define GE_NEW_ARRAY_3(x, count, heap) new(heap) x[count]
-	#define GE_NEW_ARRAY(...) EXPAND(GET_GE_NEW_ARRAY_MACRO(__VA_ARGS__, GE_NEW_ARRAY_3, GE_NEW_ARRAY_2)(__VA_ARGS__))
+	#define OSE_NEW_1(x) new x
+	#define OSE_NEW_2(x, heap) new(heap) x
+	#define OSE_NEW(...) EXPAND(GET_OSE_NEW_MACRO(__VA_ARGS__, OSE_NEW_2, OSE_NEW_1)(__VA_ARGS__))
+	#define OSE_NEW_ARRAY_2(x, count) new x[count]
+	#define OSE_NEW_ARRAY_3(x, count, heap) new(heap) x[count]
+	#define OSE_NEW_ARRAY(...) EXPAND(GET_OSE_NEW_ARRAY_MACRO(__VA_ARGS__, OSE_NEW_ARRAY_3, OSE_NEW_ARRAY_2)(__VA_ARGS__))
 	//this is literally only there for consistency
-	#define GE_DELETE(x) delete x
-	#define GE_DELETE_ARRAY(x) delete[] x
+	#define OSE_DELETE(x) delete x
+	#define OSE_DELETE_ARRAY(x) delete[] x
 #endif
 
 //Overloads declarations
