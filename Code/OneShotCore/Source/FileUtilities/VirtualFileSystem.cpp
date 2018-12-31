@@ -2,7 +2,6 @@
 #include "FileUtillities/VirtualFileSystem.h"
 #include <sys/stat.h>
 #include <filesystem>
-//#include "Logging/LoggerManager.h"
 
 CVirtualFileSystem* CVirtualFileSystem::sm_pInstance = nullptr;
 
@@ -20,7 +19,7 @@ bool CVirtualFileSystem::Mount(std::string sVirtualPath, std::string sPath)
 {
 	if (sVirtualPath[0] != '/')
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Virtual path(%) is invalid as it doesn't begin with a '/'", sVirtualPath);
+		OSE_DEBUG_LOG_WARNING("General", "Virtual path(%) is invalid as it doesn't begin with a '/'", sVirtualPath);
 		return false;
 	}
 
@@ -32,18 +31,18 @@ bool CVirtualFileSystem::Mount(std::string sVirtualPath, std::string sPath)
 	auto mountIter = m_Mounts.find(sVirtualPath);
 	if (mountIter != m_Mounts.end())
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Physical path(%) couldn't be mounted to virtual path(%), as virtual path already has a mounted physical path!", sPath, sVirtualPath);
+		OSE_DEBUG_LOG_WARNING("General", "Physical path(%) couldn't be mounted to virtual path(%), as virtual path already has a mounted physical path!", sPath, sVirtualPath);
 		return false;
 	}
 
 	if(DoesPathExist(sPath))
 	{
 		m_Mounts.try_emplace(sVirtualPath, sPath);
-		//OSE_DEBUG_LOG_INFO("General", "Physical path(%) mounted to virtual path(%) !", sPath, sVirtualPath);
+		OSE_DEBUG_LOG_INFO("General", "Physical path(%) mounted to virtual path(%) !", sPath, sVirtualPath);
 		return true;
 	}
 
-	//OSE_DEBUG_LOG_WARNING("General", "Physical path(%) couldn't be mounted to virtual path(%), as physical path doesn't exist!", sPath, sVirtualPath);
+	OSE_DEBUG_LOG_WARNING("General", "Physical path(%) couldn't be mounted to virtual path(%), as physical path doesn't exist!", sPath, sVirtualPath);
 	return false;
 }
 
@@ -53,7 +52,7 @@ bool CVirtualFileSystem::Unmount(std::string sVirtualPath)
 	if (mountIter == m_Mounts.end())
 		return false;
 
-	//OSE_DEBUG_LOG_INFO("General", "Physical path(%) unmounted from virtual path(%) !", mountIter->second, sVirtualPath);
+	OSE_DEBUG_LOG_INFO("General", "Physical path(%) unmounted from virtual path(%) !", mountIter->second, sVirtualPath);
 	m_Mounts.erase(mountIter);
 
 	return true;
@@ -84,11 +83,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 
 	if (!fOut.is_open())
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::fstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::fstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 		return false;
 	}
 
-	//OSE_DEBUG_LOG_INFO("General", "std::fstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_DEBUG_LOG_INFO("General", "std::fstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
@@ -99,11 +98,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 
 	if (!fOut.is_open())
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::ifstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::ifstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 		return false;
 	}
 
-	//OSE_DEBUG_LOG_INFO("General", "std::ifstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_DEBUG_LOG_INFO("General", "std::ifstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
@@ -114,11 +113,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 
 	if (!fOut.is_open())
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::ofstream: %\t\n\tVirtual path: %\t\n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_DEBUG_LOG_WARNING("General", "Couldn't open std::ofstream: %\t\n\tVirtual path: %\t\n\tFile name %", sPhysicalPath, sPath, sFileName);
 		return false;
 	}
 
-	//OSE_DEBUG_LOG_INFO("General", "std::ofstream opened: %\t\n Virtual path: %\t\n File name %", sPhysicalPath, sPath, sFileName);
+	OSE_DEBUG_LOG_INFO("General", "std::ofstream opened: %\t\n Virtual path: %\t\n File name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
