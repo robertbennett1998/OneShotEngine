@@ -1,6 +1,7 @@
 #include "CoreHeaders.h"
 #include "MemoryManagement/MemoryManager.h"
 #include "MemoryManagement/FreeAllocationHeap.h"
+#include "Logging/Sinks/FileSink.h"
 
 CMemoryManager* CMemoryManager::sm_pInstance = nullptr;
 
@@ -10,7 +11,11 @@ CMemoryManager* CMemoryManager::GetInstance()
 	{
 		sm_pInstance = new CMemoryManager();
 		sm_pInstance->m_pRootHeap = sm_pInstance->CreateHeap<CFreeAllocationHeap>("root", 8);
-	}
+
+		auto memLogger = CLoggingManager::GetInstance()->CreateLogger("Memory");
+		memLogger->AddSink(CFileSink::CreateFileSink("/Logs", "Memory.log"));
+		memLogger->AddSibling(CLoggingManager::GetInstance()->GetLogger("General"));
+	} 
 
 	return sm_pInstance;
 }

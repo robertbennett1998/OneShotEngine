@@ -1,0 +1,10 @@
+<Settings>
+	<General>
+		<Directories>
+			<InstallDirectory>C:\\Programming\\OneShotEngine\\</InstallDirectory>
+			<DataDirectory>C:\\Programming\\OneShotEngine\\</DataDirectory>
+		<Directories>
+		<Window>
+		</Window>
+	</General>
+</Settings>

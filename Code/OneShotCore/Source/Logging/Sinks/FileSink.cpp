@@ -17,11 +17,11 @@ std::shared_ptr<CFileSink> CFileSink::CreateFileSink(std::string sFilePath, std:
 	std::shared_ptr<CFileSink> sink = std::make_shared<CFileSink>();
 	if (!sink->Initialize(sFilePath, sFileName))
 	{
-		//OSE_DEBUG_LOG_WARNING("General", "Couldn't create file sink with the following parameters:\n\tFile Path: % \n\tFileName: %", sFilePath, sFileName);
+		OSE_LOG_WARNING("General", "Couldn't create file sink with the following parameters:\n\tFile Path: % \n\tFileName: %", sFilePath, sFileName);
 		return nullptr;
 	}
 
-	//OSE_DEBUG_LOG_INFO("General", "File sink created with the following parameters:\n\tFile Path: % \n\tFileName: %", sFilePath, sFileName);
+	OSE_DEBUG_LOG_INFO("General", "File sink created with the following parameters:\n\tFile Path: % \n\tFileName: %", sFilePath, sFileName);
 	return sink;
 }
 

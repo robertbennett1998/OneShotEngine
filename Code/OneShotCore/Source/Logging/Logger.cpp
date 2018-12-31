@@ -6,15 +6,45 @@ m_sLoggerName(sLoggerName)
 {
 }
 
+bool CLogger::AddSibling(std::shared_ptr<CLogger> logger)
+{
+	if (!m_Siblings.empty())
+	{
+		for (auto& sib : m_Siblings)
+			if (sib == logger)
+				return false;
+	}
+
+	m_Siblings.push_back(logger);
+
+	return true;
+}
+bool CLogger::RemoveSibling(std::shared_ptr<CLogger> logger)
+{
+	if (!m_Siblings.empty())
+	{
+		for (UINT i = 0; i < m_Siblings.size(); i++)
+		{
+			if (m_Siblings[i] == logger)
+			{
+				m_Siblings.erase(m_Siblings.begin() + i);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 std::string CLogger::GetCurrentLocalTime()
 {
 	std::time_t ttNow = m_SystemClock.to_time_t(m_SystemClock.now());
-	char* pNow = OSE_NEW_ARRAY(char, 26);
+	char* pNow = new char[26];
 	struct tm buf;
 	::gmtime_s(&buf, &ttNow);
 	std::strftime(pNow, 26, "%d/%m/%y - %H:%M:%S", &buf);
 	std::string sNow = std::string(pNow);
-	OSE_DELETE_ARRAY(pNow);
+	delete[] (pNow);
 
 	return sNow;
 }

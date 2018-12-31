@@ -33,7 +33,7 @@ class ONE_SHOT_CORE_DLL CFreeAllocationHeap : public IHeap
 		void Clear() override;
 		void Shutdown() override;
 
-		void* Allocate(size_t szSize) override { throw; }
+		void* Allocate(size_t szSize) override { OSE_LOG_FATAL("General", "Free Allocation Heap has no implementation for a release mode allocation"); throw; }
 		void* Allocate(size_t szSize, const uint32_t iLine, const char* pFile) override;
 		void Free(void* pPtr) override;
 		std::string WriteHeapOverviewToString(bool bPrintChildren = false) const override;

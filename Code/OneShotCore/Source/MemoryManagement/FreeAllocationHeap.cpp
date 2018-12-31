@@ -108,11 +108,10 @@ void CFreeAllocationHeap::Shutdown()
 
 void* CFreeAllocationHeap::Allocate(size_t szSize, const uint32_t iLine, const char* pFile)
 {
-	if (m_bInitialized)
+	if (!m_bInitialized)
 	{
 		size_t szRequestSize = szSize + sizeof(DebugAllocation);
 
-		
 		DebugAllocation* pAllocation = (DebugAllocation*)malloc(szRequestSize);
 		pAllocation->ullSignature = 0x00C0FFEE;
 		pAllocation->pNextAllocation = nullptr;
@@ -148,6 +147,9 @@ void* CFreeAllocationHeap::Allocate(size_t szSize, const uint32_t iLine, const c
 
 		return ((char*)pAllocation) + sizeof(DebugAllocation);
 	}
+
+	OSE_LOG_ERROR("Memory", "Free Allocation Heap couldn't allocated memory as it wasn't initialized! Allocation occured in File: % on Line: %", pFile, iLine);
+	return nullptr;
 }
 
 void CFreeAllocationHeap::Free(void* pPtr)
@@ -176,6 +178,7 @@ void CFreeAllocationHeap::Free(void* pPtr)
 		}
 		else
 		{
+			OSE_LOG_WARNING("Memory", "Attempt to deallocate memory with an incorrect signature, will use free! This may have undesidred side affects such as an object not been deconstructed! It is also a sign of heap corruption!");
 			free(pPtr);
 		}
 	}
@@ -220,8 +223,6 @@ std::string CFreeAllocationHeap::WriteHeapDetailsToString() const
 	
 	if(m_pFirstAllocation != nullptr)
 		ss << WriteAllocationsToString();
-
-	ss << "\n";
 
 	return ss.str();
 }

@@ -18,9 +18,43 @@ CLoggingManager* CLoggingManager::GetInstance()
 		if(CVirtualFileSystem::GetInstance()->Mount("/Logs", "/Root/Logs"))
 		{
 			genLogger->AddSink(CFileSink::CreateFileSink("/Logs", "General.log"));
-			OSE_DEBUG_LOG_WARNING("General", "File sink created! Messages may of been logged before and/or during the creation of this sink!");
 		}
 	}
 
 	return sm_pInstance;
+}
+
+std::shared_ptr<CLogger> CLoggingManager::CreateLogger(std::string sLoggerName)
+{
+	std::transform(sLoggerName.begin(), sLoggerName.end(), sLoggerName.begin(), ::tolower);
+	const auto existingLoggerIter = m_Loggers.find(sLoggerName);
+	if (existingLoggerIter != m_Loggers.end())
+		return existingLoggerIter->second;
+
+	auto logger = std::make_shared<CLogger>(sLoggerName);
+
+	m_Loggers.try_emplace(sLoggerName, logger);
+
+	return logger;
+}
+
+std::shared_ptr<CLogger> CLoggingManager::GetLogger(std::string sLoggerName) const
+{
+	std::transform(sLoggerName.begin(), sLoggerName.end(), sLoggerName.begin(), ::tolower);
+	const auto existingLoggerIter = m_Loggers.find(sLoggerName);
+	if (existingLoggerIter == m_Loggers.end())
+		return nullptr;
+
+	return existingLoggerIter->second;
+}
+bool CLoggingManager::RemoveLogger(std::string sLoggerName)
+{
+	std::transform(sLoggerName.begin(), sLoggerName.end(), sLoggerName.begin(), ::tolower);
+	auto existingLoggerIter = m_Loggers.find(sLoggerName);
+	if (existingLoggerIter == m_Loggers.end())
+		return false;
+
+	m_Loggers.erase(existingLoggerIter);
+
+	return true;
 }

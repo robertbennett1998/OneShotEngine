@@ -63,6 +63,9 @@ class ONE_SHOT_CORE_DLL CLogger
 			const std::string sOut = Format(sFmt, "Message", args...);
 			for (auto sink : m_Sinks)
 				sink->Output(sOut);
+
+			for (auto sib : m_Siblings)
+				sib->LogMessage(sOut);
 		}
 
 		template<class ...Args>
@@ -74,6 +77,9 @@ class ONE_SHOT_CORE_DLL CLogger
 			const std::string sOut = Format(sFmt, "Info", args...);
 			for (auto sink : m_Sinks)
 				sink->Output(sOut);
+
+			for (auto sib : m_Siblings)
+				sib->LogInfo(sOut);
 		}
 
 		template<class ...Args>
@@ -85,6 +91,9 @@ class ONE_SHOT_CORE_DLL CLogger
 			const std::string sOut = Format(sFmt, "Warning", args...);
 			for (auto sink : m_Sinks)
 				sink->Output(sOut);
+
+			for (auto sib : m_Siblings)
+				sib->LogWarning(sOut);
 		}
 
 		template<class ...Args>
@@ -96,6 +105,9 @@ class ONE_SHOT_CORE_DLL CLogger
 			const std::string sOut = Format(sFmt, "Error", args...);
 			for (auto sink : m_Sinks)
 				sink->Output(sOut);
+
+			for (auto sib : m_Siblings)
+				sib->LogError(sOut);
 		}
 
 		template<class ...Args>
@@ -107,7 +119,13 @@ class ONE_SHOT_CORE_DLL CLogger
 			const std::string sOut = Format(sFmt, "Fatal", args...);
 			for (auto sink : m_Sinks)
 				sink->Output(sOut);
+
+			for (auto sib : m_Siblings)
+				sib->LogFatal(sOut);
 		}
+
+		bool AddSibling(std::shared_ptr<CLogger> logger);
+		bool RemoveSibling(std::shared_ptr<CLogger> logger);
 
 	private:
 		inline std::string GetCurrentLocalTime();
@@ -146,6 +164,7 @@ class ONE_SHOT_CORE_DLL CLogger
 		CLogger() { return; }
 
 		std::string m_sLoggerName;
+		std::vector<std::shared_ptr<CLogger>> m_Siblings;
 		std::vector<std::shared_ptr<ILogSink>> m_Sinks;
 		std::chrono::system_clock m_SystemClock;
 };
