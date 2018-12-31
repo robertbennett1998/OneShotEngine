@@ -1,9 +1,20 @@
 #include "CoreHeaders.h"
 #include "FileUtillities/VirtualFileSystem.h"
 #include <sys/stat.h>
+#include <filesystem>
 //#include "Logging/LoggerManager.h"
 
 CVirtualFileSystem* CVirtualFileSystem::sm_pInstance = nullptr;
+
+CVirtualFileSystem* CVirtualFileSystem::GetInstance()
+{
+	if (sm_pInstance == nullptr)
+	{
+		sm_pInstance = new CVirtualFileSystem();
+		sm_pInstance->Mount("/Root", "C:\\Programming\\OneShotEngine\\");
+	}
+	return sm_pInstance;
+}
 
 bool CVirtualFileSystem::Mount(std::string sVirtualPath, std::string sPath)
 {

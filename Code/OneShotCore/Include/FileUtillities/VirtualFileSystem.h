@@ -5,13 +5,7 @@
 class ONE_SHOT_CORE_DLL CVirtualFileSystem
 {
 	public:
-		static CVirtualFileSystem* GetInstance()
-		{
-			if (sm_pInstance == nullptr)
-				sm_pInstance = new CVirtualFileSystem();
-
-			return sm_pInstance;
-		}
+		static CVirtualFileSystem* GetInstance();
 
 		bool Mount(std::string sVirtualPath, std::string sPhysicalPath);
 		bool Unmount(std::string sVirtualPath);

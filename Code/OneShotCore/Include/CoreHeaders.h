@@ -3,8 +3,8 @@
 #define ONE_SHOT_CORE_CORE_HEADERS_H
 
 #include <Windows.h>
-#include <math.h>
 
+//stdlib
 #include <string>
 #include <sstream>
 #include <vector>
@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <memory>
 #include <fstream>
+#include <thread>
 
 #ifdef _ONE_SHOT_CORE_DLL
 	#define ONE_SHOT_CORE_DLL __declspec(dllexport)

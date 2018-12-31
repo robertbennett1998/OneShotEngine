@@ -12,7 +12,7 @@ std::string CLogger::GetCurrentLocalTime()
 	char* pNow = new char[26];// OSE_NEW_ARRAY(char, 80);
 	struct tm buf;
 	::gmtime_s(&buf, &ttNow);
-	std::strftime(pNow, 80, "%d/%m/%y - %H:%M:%S", &buf);
+	std::strftime(pNow, 26, "%d/%m/%y - %H:%M:%S", &buf);
 	std::string sNow = std::string(pNow);
 	delete[] (pNow);
 
