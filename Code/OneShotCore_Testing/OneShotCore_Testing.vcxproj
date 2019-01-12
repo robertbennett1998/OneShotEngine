@@ -74,7 +74,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)../bin/$(Platform)/$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)../bin/$(Platform)/$(Configuration)/InitDir/$(ProjectName)/</IntDir>
-    <IncludePath>$(SolutionDir)/OneShotCore/Include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)/;$(SolutionDir)/OneShotCore/Include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <SourcePath>$(SolutionDir)/OneShotCore/Source/;$(VC_SourcePath);</SourcePath>
     <LibraryPath>$(SolutionDir)../bin/$(Platform)/$(Configuration)/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>

@@ -73,7 +73,28 @@ std::string CVirtualFileSystem::ResolvePhysicalPath(std::string sPath) const
 	if (sBaseVirtualDir == sPath)
 		return mountIter->second;
 
-	return mountIter->second + sPath.erase(0, szPos + 1) + "\\";
+	size_t szLastDot = sPath.find_last_of('.');
+
+	bool bIsFile = false;
+	if (szLastDot != (size_t)-1)
+	{
+		std::string sExt = sPath.substr(szLastDot, sPath.length() - szLastDot);
+
+		size_t szSlash = sExt.find_first_of('/');
+		szSlash |= sExt.find_first_of('\\');
+
+		if(szSlash == (size_t)-1)
+			bIsFile = true;
+	}
+
+	if (bIsFile)
+	{
+		return mountIter->second + sPath.erase(0, szPos + 1);
+	}
+	else
+	{
+		return mountIter->second + sPath.erase(0, szPos + 1) + "\\";
+	}
 }
 
 bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileName, std::fstream& fOut, std::ios_base::openmode openMode)

@@ -1,10 +1,8 @@
 <Settings>
-	<General>
-		<Directories>
-			<InstallDirectory>C:\\Programming\\OneShotEngine\\</InstallDirectory>
-			<DataDirectory>C:\\Programming\\OneShotEngine\\</DataDirectory>
-		<Directories>
-		<Window>
-		</Window>
-	</General>
+	<Directories>
+		<Directory pathName="Install" path="C:\\Programming\OneShotEngine\" />
+		<Directory pathName="Data" path="C:\\Programming\OneShotEngine\" />
+	</Directories>
+	<Window>
+	</Window>
 </Settings>
