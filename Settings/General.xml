@@ -1,8 +1,8 @@
 <Settings>
-	<Directories>
-		<Directory pathName="Install" path="C:\\Programming\OneShotEngine\" />
-		<Directory pathName="Data" path="C:\\Programming\OneShotEngine\" />
-	</Directories>
+	<VirtualPaths>
+		<Mount virtualPath="/root" physicalPath="C:\\Programming\OneShotEngine\" />
+		<Mount virtualPath="/data" virtualPath="C:\\Programming\OneShotEngine\" />
+	</VirtualPaths>
 	<Window>
 	</Window>
 </Settings>

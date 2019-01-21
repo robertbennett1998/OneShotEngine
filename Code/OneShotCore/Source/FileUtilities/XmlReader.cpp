@@ -17,11 +17,11 @@ std::shared_ptr<pugi::xml_document> CXmlReader::LoadDocument(std::string sPath)
 
 	if(res)
 	{
-		OSE_DEBUG_LOG_INFO("General", "Loaded xml file %!", sPhysicalPath);
+		OSE_LOG_INFO("General", "Loaded xml file %!", sPhysicalPath);
 	}
 	else
 	{
-		OSE_DEBUG_LOG_WARNING("General", "Failed to load xml file %! With error %! At position %", sPhysicalPath, res.description(), res.offset);
+		OSE_LOG_WARNING("General", "Failed to load xml file %! With error %! At position %", sPhysicalPath, res.description(), res.offset);
 	}
 
 	return doc;
