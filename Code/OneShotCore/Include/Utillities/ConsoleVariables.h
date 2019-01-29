@@ -72,7 +72,7 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 			auto iter = m_Variables.find(sVarName);
 			if (iter == m_Variables.end())
 			{
-				OSE_DEBUG_LOG_WARNING("General", "Couldn't get console variable % value, as couldn't find a console variabl with that name.", sVarName);
+				OSE_LOG_WARNING("General", "Couldn't get console variable % value, as couldn't find a console variable with that name.", sVarName);
 				return false;
 			}
 
@@ -86,7 +86,7 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 			auto iter = m_Variables.find(sVarName);
 			if (iter == m_Variables.end())
 			{
-				OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variabl with that name.", sVarName);
+				OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variable with that name.", sVarName);
 				return std::shared_ptr<T>(nullptr);
 			}
 
