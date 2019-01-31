@@ -4,12 +4,19 @@
 
 class ONE_SHOT_CORE_DLL CConsoleVariables
 {
+	private:
+		struct CVar
+		{
+			std::shared_ptr<char> pValue;
+			std::vector<std::function<void()>> valueChangedCallbacks;
+		};
+	
 	public:
 		CConsoleVariables();
 		~CConsoleVariables();
 
 		template<class T>
-		bool RegisterVariable(std::string sVarName, T initialValue)
+		bool RegisterVariable(std::string sVarName, T initialValue, std::function<void()> valueChangedCallback = nullptr)
 		{
 			if (m_Variables.find(sVarName) != m_Variables.end())
 				return false;
@@ -17,25 +24,29 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 			auto pVal = std::make_shared<T>();
 			*pVal = initialValue;
 
-			m_Variables.try_emplace(sVarName, std::reinterpret_pointer_cast<char>(pVal));
+			CVar var;
+			var.pValue = std::reinterpret_pointer_cast<char>(pVal);
+			if (valueChangedCallback != nullptr)
+				var.valueChangedCallbacks.push_back(valueChangedCallback);
+
+			m_Variables.try_emplace(sVarName, var);
 			return true;
 		}
 
-		template<class T, class ...Args>
-		bool RegisterVariable(std::string sVarName, Args... args)
+		bool AddValueChangedCallback(std::string sVarName, std::function<void()> callback)
 		{
-			if (m_Variables.find(sVarName) != m_Variables.end())
+			auto iter = m_Variables.find(sVarName);
+			if (iter == m_Variables.end())
 			{
-				OSE_LOG_WARNING("General", "Couldn't register console variable % as a console variable is already registered with that name.", sVarName);
+				OSE_LOG_WARNING("General", "Couldn't get console variable % value, as couldn't find a console variable with that name.", sVarName);
 				return false;
 			}
 
-			auto pVal = std::make_shared<T>(args...);
+			iter->second.valueChangedCallbacks.push_back(callback);
 
-			m_Variables.try_emplace(sVarName, std::reinterpret_pointer_cast<char>(pVal));
-			OSE_LOG_INFO("General", "Registered a console variable with the name %", sVarName);
 			return true;
 		}
+
 
 		bool DeregisterVariable(std::string sVarName)
 		{
@@ -54,7 +65,14 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 		template<class T>
 		bool SetValue(std::string sVarName, T value)
 		{
-			auto p = GetVariable<T>(sVarName);
+			auto iter = m_Variables.find(sVarName);
+			if (iter == m_Variables.end())
+			{
+				OSE_LOG_WARNING("General", "Couldn't set console variable % value, as couldn't find a console variable with that name.", sVarName);
+				return false;
+			}
+
+			auto p = iter->second.pValue;
 			if (p == nullptr)
 			{
 				OSE_LOG_WARNING("General", "Couldn't set console variables value as couldn't find console variable %.", sVarName);
@@ -62,6 +80,10 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 			}
 
 			*p = value;
+
+			for (auto callback : iter->second.valueChangedCallbacks)
+				callback();
+
 			return true;
 		}
 
@@ -75,25 +97,22 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 				return false;
 			}
 
-			value = *std::reinterpret_pointer_cast<T>(iter->second);
+			value = *std::reinterpret_pointer_cast<T>(iter->second.pValue);
 			return true;
 		}
 
-		template<class T>
-		std::shared_ptr<T> GetVariable(std::string sVarName)
-		{
-			auto iter = m_Variables.find(sVarName);
-			if (iter == m_Variables.end())
-			{
-				OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variable with that name.", sVarName);
-				return std::shared_ptr<T>(nullptr);
-			}
-
-			return std::reinterpret_pointer_cast<T>(iter->second);
-		}
+		//template<class T>
+		//std::shared_ptr<T> GetVariable(std::string sVarName)
+		//{
+		//	auto iter = m_Variables.find(sVarName);
+		//	if (iter == m_Variables.end())
+		//	{
+		//		OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variable with that name.", sVarName);
+		//		return std::shared_ptr<T>(nullptr);
+		//	}
 
 	private:
-		std::map<std::string, std::shared_ptr<char>> m_Variables;
+		std::map<std::string, CVar> m_Variables;
 };
 
 #endif

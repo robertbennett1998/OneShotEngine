@@ -7,13 +7,13 @@
 #include "Vendor/pugixml/src/pugiconfig.hpp"
 #include "Vendor/pugixml/src/pugixml.hpp"
 
-class ONE_SHOT_CORE_DLL CXmlReader
+class ONE_SHOT_CORE_DLL CXmlConfigurationManager
 {
 	public:
-		CXmlReader();
-		~CXmlReader();
+		CXmlConfigurationManager();
+		~CXmlConfigurationManager();
 
-		std::shared_ptr<pugi::xml_document> LoadDocument(std::string sPath);
+		std::shared_ptr<pugi::xml_document> OpenConfiguration(std::string sPath);
 };
 
 #endif

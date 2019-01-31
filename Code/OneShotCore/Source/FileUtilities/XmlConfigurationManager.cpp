@@ -1,15 +1,15 @@
 #include "CoreHeaders.h"
-#include "FileUtillities/XmlReader.h"
+#include "FileUtillities/XmlConfigurationManager.h"
 
-CXmlReader::CXmlReader()
+CXmlConfigurationManager::CXmlConfigurationManager()
 {
 }
 
-CXmlReader::~CXmlReader()
+CXmlConfigurationManager::~CXmlConfigurationManager()
 {
 }
 
-std::shared_ptr<pugi::xml_document> CXmlReader::LoadDocument(std::string sPath)
+std::shared_ptr<pugi::xml_document> CXmlConfigurationManager::OpenConfiguration(std::string sPath)
 {
 	std::shared_ptr<pugi::xml_document> doc = std::make_shared<pugi::xml_document>();
 	std::string sPhysicalPath = CVirtualFileSystem::GetInstance()->ResolvePhysicalPath(sPath).c_str();

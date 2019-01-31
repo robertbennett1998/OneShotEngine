@@ -48,10 +48,10 @@
     <ClInclude Include="Include\Logging\LoggingManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\FileUtillities\XmlReader.h">
+    <ClInclude Include="Include\Utillities\ConsoleVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Utillities\ConsoleVariables.h">
+    <ClInclude Include="Include\FileUtillities\XmlConfigurationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,10 +89,10 @@
     <ClCompile Include="Source\Logging\LoggingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\FileUtilities\XmlReader.cpp">
+    <ClCompile Include="Source\Utillities\ConsoleVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utillities\ConsoleVariables.cpp">
+    <ClCompile Include="Source\FileUtilities\XmlConfigurationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
