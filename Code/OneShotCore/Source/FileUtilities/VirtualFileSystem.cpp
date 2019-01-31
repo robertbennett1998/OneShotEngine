@@ -35,7 +35,7 @@ bool CVirtualFileSystem::Mount(std::string sVirtualPath, std::string sPath)
 		return false;
 	}
 
-	if(DoesPathExist(sPath))
+	if(DoesDirectoryPathExist(sPath))
 	{
 		m_Mounts.try_emplace(sVirtualPath, sPath);
 		OSE_DEBUG_LOG_INFO("General", "Physical path(%) mounted to virtual path(%) !", sPath, sVirtualPath);
@@ -89,12 +89,24 @@ std::string CVirtualFileSystem::ResolvePhysicalPath(std::string sPath) const
 
 	if (bIsFile)
 	{
-		return mountIter->second + sPath.erase(0, szPos + 1);
+		std::string sResolvedPath = mountIter->second + sPath.erase(0, szPos + 1);
+		if (!DoesFilePathExist(sResolvedPath))
+		{
+			OSE_DEBUG_LOG_WARNING("General", "File with resolved path(%) doesn't exist", sResolvedPath);
+			return "";
+		}
+
+		return sResolvedPath;
 	}
-	else
+
+	std::string sResolvedPath = mountIter->second + sPath.erase(0, szPos + 1) + "\\";
+	if (!DoesFilePathExist(sResolvedPath))
 	{
-		return mountIter->second + sPath.erase(0, szPos + 1) + "\\";
+		OSE_DEBUG_LOG_WARNING("General", "Directory with resolved path(%) doesn't exist", sResolvedPath);
+		return "";
 	}
+
+	return sResolvedPath;
 }
 
 bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileName, std::fstream& fOut, std::ios_base::openmode openMode)
@@ -142,7 +154,7 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 	return true;
 }
 
-bool CVirtualFileSystem::DoesPathExist(std::string sPath) const
+bool CVirtualFileSystem::DoesDirectoryPathExist(std::string sPath) const
 {
 	struct stat info;
 	if (stat(sPath.c_str(), &info) != 0)
@@ -150,6 +162,19 @@ bool CVirtualFileSystem::DoesPathExist(std::string sPath) const
 		return false;
 	}
 	else if (info.st_mode & S_IFDIR)
+	{
+		return true;
+	}
+}
+
+bool CVirtualFileSystem::DoesFilePathExist(std::string sPath) const
+{
+	struct stat info;
+	if (stat(sPath.c_str(), &info) != 0)
+	{
+		return false;
+	}
+	else if (info.st_mode & S_IFREG)
 	{
 		return true;
 	}
