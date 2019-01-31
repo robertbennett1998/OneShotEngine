@@ -22,7 +22,7 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 		}
 
 		template<class T, class ...Args>
-		bool RegisterVariable(std::string sVarName, T initialValue, Args... args)
+		bool RegisterVariable(std::string sVarName, Args... args)
 		{
 			if (m_Variables.find(sVarName) != m_Variables.end())
 			{
@@ -31,7 +31,6 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 			}
 
 			auto pVal = std::make_shared<T>(args...);
-			*pVal = initialValue;
 
 			m_Variables.try_emplace(sVarName, std::reinterpret_pointer_cast<char>(pVal));
 			OSE_LOG_INFO("General", "Registered a console variable with the name %", sVarName);
