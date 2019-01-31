@@ -13,6 +13,7 @@
 #include <memory>
 #include <fstream>
 #include <thread>
+#include <tuple>
 
 #ifdef _ONE_SHOT_CORE_DLL
 	#define ONE_SHOT_CORE_DLL __declspec(dllexport)
@@ -24,6 +25,6 @@
 #include <Logging/LoggingManager.h>
 #include <Logging/Logger.h>
 #include <FileUtillities/VirtualFileSystem.h>
-#include <Time/Stopwatch.h>
+#include "Utillities/ConsoleVariables.h"
 
 #endif

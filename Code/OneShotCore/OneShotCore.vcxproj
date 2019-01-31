@@ -127,7 +127,6 @@
   <ItemGroup>
     <ClInclude Include="Include\CoreHeaders.h" />
     <ClInclude Include="Include\FileUtillities\VirtualFileSystem.h" />
-    <ClInclude Include="Include\FileUtillities\XmlReader.h" />
     <ClInclude Include="Include\Logging\Logger.h" />
     <ClInclude Include="Include\Logging\LoggingManager.h" />
     <ClInclude Include="Include\Logging\Sinks\FileSink.h" />
@@ -137,11 +136,11 @@
     <ClInclude Include="Include\MemoryManagement\Interfaces\IHeap.h" />
     <ClInclude Include="Include\MemoryManagement\MemoryManager.h" />
     <ClInclude Include="Include\Time\Stopwatch.h" />
+    <ClInclude Include="Include\Utillities\ConsoleVariables.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CoreHeaders.cpp" />
     <ClCompile Include="Source\FileUtilities\VirtualFileSystem.cpp" />
-    <ClCompile Include="Source\FileUtilities\XmlReader.cpp" />
     <ClCompile Include="Source\Logging\Logger.cpp" />
     <ClCompile Include="Source\Logging\LoggingManager.cpp" />
     <ClCompile Include="Source\Logging\Sinks\FileSink.cpp" />
@@ -151,6 +150,7 @@
     <ClCompile Include="Source\MemoryManagement\Interfaces\IHeap.cpp" />
     <ClCompile Include="Source\MemoryManagement\MemoryManager.cpp" />
     <ClCompile Include="Source\Time\Stopwatch.cpp" />
+    <ClCompile Include="Source\Utillities\ConsoleVariables.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

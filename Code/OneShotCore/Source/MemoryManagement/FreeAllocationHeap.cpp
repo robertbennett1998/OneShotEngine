@@ -108,7 +108,7 @@ void CFreeAllocationHeap::Shutdown()
 
 void* CFreeAllocationHeap::Allocate(size_t szSize, const uint32_t iLine, const char* pFile)
 {
-	if (!m_bInitialized)
+	if (m_bInitialized)
 	{
 		size_t szRequestSize = szSize + sizeof(DebugAllocation);
 

@@ -38,7 +38,7 @@ bool CVirtualFileSystem::Mount(std::string sVirtualPath, std::string sPath)
 	if(DoesDirectoryPathExist(sPath))
 	{
 		m_Mounts.try_emplace(sVirtualPath, sPath);
-		OSE_DEBUG_LOG_INFO("General", "Physical path(%) mounted to virtual path(%) !", sPath, sVirtualPath);
+		OSE_LOG_INFO("General", "Physical path(%) mounted to virtual path(%) !", sPath, sVirtualPath);
 		return true;
 	}
 
@@ -52,7 +52,7 @@ bool CVirtualFileSystem::Unmount(std::string sVirtualPath)
 	if (mountIter == m_Mounts.end())
 		return false;
 
-	OSE_DEBUG_LOG_INFO("General", "Physical path(%) unmounted from virtual path(%) !", mountIter->second, sVirtualPath);
+	OSE_LOG_INFO("General", "Physical path(%) unmounted from virtual path(%) !", mountIter->second, sVirtualPath);
 	m_Mounts.erase(mountIter);
 
 	return true;
@@ -120,7 +120,7 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 		return false;
 	}
 
-	OSE_DEBUG_LOG_INFO("General", "std::fstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::fstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
@@ -135,7 +135,7 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 		return false;
 	}
 
-	OSE_DEBUG_LOG_INFO("General", "std::ifstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::ifstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
@@ -150,7 +150,7 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 		return false;
 	}
 
-	OSE_DEBUG_LOG_INFO("General", "std::ofstream opened: %\t\n Virtual path: %\t\n File name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::ofstream opened: %\t\n Virtual path: %\t\n File name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 
