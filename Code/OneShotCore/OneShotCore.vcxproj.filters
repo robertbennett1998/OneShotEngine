@@ -48,7 +48,7 @@
     <ClInclude Include="Include\Logging\LoggingManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Utillities\ConsoleVariables.h">
+    <ClInclude Include="Include\Utillities\GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClCompile Include="Source\Logging\LoggingManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Utillities\ConsoleVariables.cpp">
+    <ClCompile Include="Source\Utillities\GlobalVariables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

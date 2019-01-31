@@ -25,6 +25,6 @@
 #include <Logging/LoggingManager.h>
 #include <Logging/Logger.h>
 #include <FileUtillities/VirtualFileSystem.h>
-#include "Utillities/ConsoleVariables.h"
+#include "Utillities/GlobalVariables.h"
 
 #endif

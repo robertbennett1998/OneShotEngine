@@ -1,12 +1,12 @@
 #include "CoreHeaders.h"
-#include "Utillities/ConsoleVariables.h"
+#include "Utillities/GlobalVariables.h"
 #include "MemoryManagement/FreeAllocationHeap.h"
 
-CConsoleVariables::CConsoleVariables()
+CGlobalVariables::CGlobalVariables()
 {
 	IHeap* pHeap = CMemoryManager::GetInstance()->CreateHeap<CFreeAllocationHeap>("CVars", 1, CMemoryManager::GetInstance()->GetRootHeap());
 }
 
-CConsoleVariables::~CConsoleVariables()
+CGlobalVariables::~CGlobalVariables()
 {
 }

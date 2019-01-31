@@ -2,7 +2,7 @@
 #ifndef ONE_SHOT_CORE_CONSOLE_VARIABLES_H
 #define ONE_SHOT_CORE_CONSOLE_VARIABLES_H
 
-class ONE_SHOT_CORE_DLL CConsoleVariables
+class ONE_SHOT_CORE_DLL CGlobalVariables
 {
 	private:
 		struct CVar
@@ -12,8 +12,8 @@ class ONE_SHOT_CORE_DLL CConsoleVariables
 		};
 	
 	public:
-		CConsoleVariables();
-		~CConsoleVariables();
+		CGlobalVariables();
+		~CGlobalVariables();
 
 		template<class T>
 		bool RegisterVariable(std::string sVarName, T initialValue, std::function<void()> valueChangedCallback = nullptr)
