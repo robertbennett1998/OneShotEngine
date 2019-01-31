@@ -1,8 +1,16 @@
 <Configuration>
 	<VirtualPaths>
 		<Mount virtualPath="/root" physicalPath="C:\\Programming\OneShotEngine\" />
-		<Mount virtualPath="/data" virtualPath="C:\\Programming\OneShotEngine\" />
+		<Mount virtualPath="/data" physicalPath="C:\\Programming\OneShotEngine\" />
 	</VirtualPaths>
 	<Window>
+		<Width>800</Width>
+		<Height>600</Height>
+		<!-- 1 - Borderless 2 - Full Screen 3 - Windowed -->
+		<Mode>1</Mode>
 	</Window>
+	<Renderer>
+		<MSAAQuality>16</MSAAQuality>
+		<MSAACount>4</MSAACount>
+	</Renderer>
 </Configuration>

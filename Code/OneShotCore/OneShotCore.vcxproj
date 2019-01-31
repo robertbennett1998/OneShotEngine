@@ -127,7 +127,6 @@
   <ItemGroup>
     <ClInclude Include="Include\CoreHeaders.h" />
     <ClInclude Include="Include\FileUtillities\VirtualFileSystem.h" />
-    <ClInclude Include="Include\FileUtillities\XmlConfigurationManager.h" />
     <ClInclude Include="Include\Logging\Logger.h" />
     <ClInclude Include="Include\Logging\LoggingManager.h" />
     <ClInclude Include="Include\Logging\Sinks\FileSink.h" />
@@ -142,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="Source\CoreHeaders.cpp" />
     <ClCompile Include="Source\FileUtilities\VirtualFileSystem.cpp" />
-    <ClCompile Include="Source\FileUtilities\XmlConfigurationManager.cpp" />
     <ClCompile Include="Source\Logging\Logger.cpp" />
     <ClCompile Include="Source\Logging\LoggingManager.cpp" />
     <ClCompile Include="Source\Logging\Sinks\FileSink.cpp" />
