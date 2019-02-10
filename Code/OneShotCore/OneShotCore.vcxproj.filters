@@ -51,6 +51,9 @@
     <ClInclude Include="Include\Utillities\GlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Include\FileUtillities\ConfigurationFileParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CoreHeaders.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Utillities\GlobalVariables.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FileUtilities\ConfigurationFileParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

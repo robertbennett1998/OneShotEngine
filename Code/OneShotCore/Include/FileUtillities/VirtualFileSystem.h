@@ -15,8 +15,8 @@ class ONE_SHOT_CORE_DLL CVirtualFileSystem
 		bool CreateFileStream(std::string sPath, std::string sFileName, std::ifstream& fOut, std::ios_base::openmode openMode = std::fstream::in);
 		bool CreateFileStream(std::string sPath, std::string sFileName, std::ofstream& fOut, std::ios_base::openmode openMode = std::fstream::out);
 
-		bool DoesDirectoryPathExist(std::string sPath) const;
-		bool DoesFilePathExist(std::string sPath) const;
+		static bool DoesDirectoryPathExist(std::string sPath);
+		static bool DoesFilePathExist(std::string sPath);
 
 	private:
 		CVirtualFileSystem() { return; }

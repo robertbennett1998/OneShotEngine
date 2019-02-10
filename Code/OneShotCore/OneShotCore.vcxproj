@@ -95,6 +95,9 @@
       <PrecompiledHeaderFile>CoreHeaders.h</PrecompiledHeaderFile>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>comsuppw.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -137,9 +140,11 @@
     <ClInclude Include="Include\MemoryManagement\MemoryManager.h" />
     <ClInclude Include="Include\Time\Stopwatch.h" />
     <ClInclude Include="Include\Utillities\GlobalVariables.h" />
+    <ClInclude Include="Include\FileUtillities\ConfigurationFileParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\CoreHeaders.cpp" />
+    <ClCompile Include="Source\FileUtilities\ConfigurationFileParser.cpp" />
     <ClCompile Include="Source\FileUtilities\VirtualFileSystem.cpp" />
     <ClCompile Include="Source\Logging\Logger.cpp" />
     <ClCompile Include="Source\Logging\LoggingManager.cpp" />

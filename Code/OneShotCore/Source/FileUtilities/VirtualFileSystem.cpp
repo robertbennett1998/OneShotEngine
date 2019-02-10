@@ -10,7 +10,18 @@ CVirtualFileSystem* CVirtualFileSystem::GetInstance()
 	if (sm_pInstance == nullptr)
 	{
 		sm_pInstance = new CVirtualFileSystem();
-		sm_pInstance->Mount("/Root", "C:\\Programming\\OneShotEngine\\");
+		std::string sAppDataStorePhysicalPath = GetAppDataStoreFilePath();
+		if(sAppDataStorePhysicalPath == "")
+		{
+			sAppDataStorePhysicalPath = CreateAppDataStoreFilePath();
+			if(sAppDataStorePhysicalPath == "")
+			{
+				OSE_LOG_FATAL("General", "Cannot resolve appdata filepath!");
+				throw;
+			}
+		}
+
+		sm_pInstance->Mount("/AppDataStore", sAppDataStorePhysicalPath);
 	}
 	return sm_pInstance;
 }
@@ -154,7 +165,7 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 	return true;
 }
 
-bool CVirtualFileSystem::DoesDirectoryPathExist(std::string sPath) const
+bool CVirtualFileSystem::DoesDirectoryPathExist(std::string sPath)
 {
 	struct stat info;
 	if (stat(sPath.c_str(), &info) != 0)
@@ -167,7 +178,7 @@ bool CVirtualFileSystem::DoesDirectoryPathExist(std::string sPath) const
 	}
 }
 
-bool CVirtualFileSystem::DoesFilePathExist(std::string sPath) const
+bool CVirtualFileSystem::DoesFilePathExist(std::string sPath)
 {
 	struct stat info;
 	if (stat(sPath.c_str(), &info) != 0)
