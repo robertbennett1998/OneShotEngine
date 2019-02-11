@@ -34,10 +34,15 @@ bool CConfigurationFileParser::Load(std::string sFilePath)
 		return false;
 	}
 
+	std::map<std::string, std::vector<std::string>> configItemGroups;
+
 	OSE_DEBUG_LOG_INFO("General", "Configuration loaded:");
 	for (auto keyValPair : keyValPairs)
+	{
+		std::string sKey = keyValPair.first;
 		OSE_DEBUG_LOG_INFO("General", "\t% = %", keyValPair.first, keyValPair.second);
-
+	}
+	
 	return false;
 }
 
@@ -69,9 +74,6 @@ void CConfigurationFileParser::ReadDocumentNodes(pugi::xml_document& doc, std::m
 		}
 
 		ReadChildNodes(it, vars, currKey);
-
-		int i = 0;
-		AutoConvertToType("12", "int", i);
 	}
 }
 
