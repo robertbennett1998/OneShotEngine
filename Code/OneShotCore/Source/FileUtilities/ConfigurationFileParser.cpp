@@ -23,6 +23,7 @@ bool CConfigurationFileParser::Load(std::string sFilePath)
 	else
 	{
 		OSE_LOG_WARNING("General", "Failed to load xml file %! With error %! At position %", sPhysicalPath, res.description(), res.offset);
+		return false;
 	}
 
 	std::map<std::string, std::string> keyValPairs;
@@ -42,7 +43,50 @@ bool CConfigurationFileParser::Load(std::string sFilePath)
 		std::string sKey = keyValPair.first;
 		OSE_DEBUG_LOG_INFO("General", "\t% = %", keyValPair.first, keyValPair.second);
 	}
-	
+
+	std::vector<std::string> keys;
+	for(auto keyValPair : keyValPairs)
+	{
+		std::string sKey = keyValPair.first;
+		size_t szLastDotPos = sKey.find_last_of('.');
+		if(szLastDotPos == std::string::npos)
+		{
+			keys.push_back(sKey);
+		}
+
+		std::string sLastPart = sKey.substr(szLastDotPos, sKey.length() - szLastDotPos);
+
+		if (sLastPart == "cvar" || sLastPart == "type")
+			continue;
+
+		keys.push_back(sKey);
+	}
+
+
+	std::vector<ConfigItem> configItems;
+	for (auto key : keys)
+	{
+		ConfigItem configItem;
+		configItem.bIsCVar = keyValPairs[key + ".cvar"] == "true" ? true : false;
+		configItem.sType = keyValPairs[key + ".type"];
+		configItem.pValue = AutoConvertToType(keyValPairs[key], configItem.sType);
+		configItem.key = key;
+
+		if(configItem.pValue == nullptr)
+		{
+			OSE_LOG_WARNING("General", "Couldn't create config item for key %", key);
+			continue;
+		}
+
+		configItems.push_back(configItem);
+	}
+
+	OSE_DEBUG_LOG_INFO("General", "Config created with the following items: ");
+	for(auto configItem : configItems)
+	{
+		OSE_DEBUG_LOG_INFO("General", "% - IsCVar: % - Type: % - pValue: %", configItem.key, configItem.bIsCVar, configItem.sType, configItem.pValue);
+	}
+
 	return false;
 }
 
@@ -98,4 +142,66 @@ void CConfigurationFileParser::ReadChildNodes(pugi::xml_node_iterator node, std:
 
 		ReadChildNodes(it, vars, currKey);
 	}
+}
+
+char* CConfigurationFileParser::AutoConvertToType(std::string value, std::string type)
+{
+	char* pValue = nullptr;
+
+	if (type == "bool")
+	{
+		bool* p = new bool;
+		*p = (char*)(value == "true" ? true : false);
+		pValue = (char*)p;
+	}
+	else if (type == "int")
+	{
+		int* p = new int;
+		*p = std::stoi(value);
+		pValue = (char*)p;
+	}
+	else if (type == "long")
+	{
+		long* p = new long;
+		*p = std::stol(value);
+		pValue = (char*)p;
+	}
+	else if (type == "longlong")
+	{
+		long long* p = new long long;
+		*p = std::stoll(value);
+		pValue = (char*)p;
+	}
+	else if (type == "ulong")
+	{
+		unsigned long* p = new unsigned long;
+		*p = std::stoul(value);
+		pValue = (char*)p;
+	}
+	else if (type == "ulonglong")
+	{
+		unsigned long long* p = new unsigned long long;
+		*p = std::stoull(value);
+		pValue = (char*)p;
+	}
+	else if (type == "float")
+	{
+		float* p = new float;
+		*p = std::stof(value);
+		pValue = (char*)p;
+	}
+	else if (type == "double")
+	{
+		double* p = new double;
+		*p = std::stod(value);
+		pValue = (char*)p;
+	}
+	else if (type == "longdouble")
+	{
+		long double* p = new long double;
+		*p = std::stold(value);
+		pValue = (char*)p;
+	}
+
+	return pValue;
 }
