@@ -4,7 +4,6 @@
 
 CGlobalVariables::CGlobalVariables()
 {
-	IHeap* pHeap = CMemoryManager::GetInstance()->CreateHeap<CFreeAllocationHeap>("CVars", 1, CMemoryManager::GetInstance()->GetRootHeap());
 }
 
 CGlobalVariables::~CGlobalVariables()

@@ -8,7 +8,7 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 		struct CVar
 		{
 			std::shared_ptr<char> pValue;
-			std::vector<std::function<void()>> valueChangedCallbacks;
+			std::vector<std::function<void(std::string)>> valueChangedCallbacks;
 		};
 	
 	public:
@@ -16,7 +16,7 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 		~CGlobalVariables();
 
 		template<class T>
-		bool RegisterVariable(std::string sVarName, T initialValue, std::function<void()> valueChangedCallback = nullptr)
+		bool RegisterVariable(std::string sVarName, T initialValue, std::function<void(std::string)> valueChangedCallback = nullptr)
 		{
 			if (m_Variables.find(sVarName) != m_Variables.end())
 				return false;
@@ -33,7 +33,22 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 			return true;
 		}
 
-		bool AddValueChangedCallback(std::string sVarName, std::function<void()> callback)
+		bool RegisterVariable(std::string sVarName, std::shared_ptr<char> variable, std::function<void(std::string)> valueChangedCallback = nullptr)
+		{
+			if (m_Variables.find(sVarName) != m_Variables.end())
+				return false;
+
+
+			CVar var;
+			var.pValue = variable;
+			if (valueChangedCallback != nullptr)
+				var.valueChangedCallbacks.push_back(valueChangedCallback);
+
+			m_Variables.try_emplace(sVarName, var);
+			return true;
+		}
+
+		bool AddValueChangedCallback(std::string sVarName, std::function<void(std::string)> callback)
 		{
 			auto iter = m_Variables.find(sVarName);
 			if (iter == m_Variables.end())
@@ -79,10 +94,10 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 				return false;
 			}
 
-			*p = value;
+			*std::reinterpret_pointer_cast<T>(p) = value;
 
 			for (auto callback : iter->second.valueChangedCallbacks)
-				callback();
+				callback(sVarName);
 
 			return true;
 		}
@@ -101,15 +116,18 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 			return true;
 		}
 
-		//template<class T>
-		//std::shared_ptr<T> GetVariable(std::string sVarName)
-		//{
-		//	auto iter = m_Variables.find(sVarName);
-		//	if (iter == m_Variables.end())
-		//	{
-		//		OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variable with that name.", sVarName);
-		//		return std::shared_ptr<T>(nullptr);
-		//	}
+		template<class T>
+		std::shared_ptr<T> GetVariable(std::string sVarName)
+		{
+			auto iter = m_Variables.find(sVarName);
+			if (iter == m_Variables.end())
+			{
+				OSE_LOG_WARNING("General", "Couldn't get console variable %, as couldn't find a console variable with that name.", sVarName);
+				return std::shared_ptr<T>(nullptr);
+			}
+
+			return iter->second;
+		}
 
 	private:
 		std::map<std::string, CVar> m_Variables;
