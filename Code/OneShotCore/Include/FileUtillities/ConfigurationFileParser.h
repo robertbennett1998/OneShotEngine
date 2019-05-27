@@ -44,7 +44,34 @@ class ONE_SHOT_CORE_DLL CConfigurationFileParser
 		template<class T>
 		T Get(std::string key)
 		{
+			if (m_ConfigItems.find(key) == m_ConfigItems.end())
+				OSE_LOG_WARNING("General", "Couldn't find config item with the key %", key);
+
 			return *std::reinterpret_pointer_cast<T>(m_ConfigItems[key].pValue);
+		}
+
+		template<class T>
+		std::vector<std::pair<std::string, T>> GetAll(std::string pattern)
+		{
+			std::vector<std::pair<std::string, T>> values;
+			size_t szWildcardPos = pattern.find_first_of('*');
+			if (szWildcardPos != std::string::npos)
+			{
+				std::vector<std::string> keys;
+				std::string sSearchTerm = pattern.erase(szWildcardPos);
+				for (std::map<std::string, ConfigItem>::iterator it = m_ConfigItems.begin(); it != m_ConfigItems.end(); ++it)
+				{
+					size_t szSearchPath = it->first.find(sSearchTerm);
+
+					if (szSearchPath != std::string::npos)
+						keys.push_back(it->first);
+				}
+	
+				for (int i = 0; i < keys.size(); i++)
+					values.push_back(std::pair<std::string, T>(keys[i], *std::reinterpret_pointer_cast<T>(m_ConfigItems[keys[i]].pValue)));
+			}
+
+			return values;
 		}
 
 		bool IsSaveOnChangeEnabled() const

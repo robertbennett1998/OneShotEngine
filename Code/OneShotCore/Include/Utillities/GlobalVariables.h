@@ -1,6 +1,7 @@
 #pragma once
 #ifndef ONE_SHOT_CORE_CONSOLE_VARIABLES_H
 #define ONE_SHOT_CORE_CONSOLE_VARIABLES_H
+#include <functional>
 
 class ONE_SHOT_CORE_DLL CGlobalVariables
 {
@@ -61,7 +62,6 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 
 			return true;
 		}
-
 
 		bool DeregisterVariable(std::string sVarName)
 		{
@@ -126,7 +126,7 @@ class ONE_SHOT_CORE_DLL CGlobalVariables
 				return std::shared_ptr<T>(nullptr);
 			}
 
-			return iter->second;
+			return std::reinterpret_pointer_cast<T>(iter->second.pValue);
 		}
 
 	private:
