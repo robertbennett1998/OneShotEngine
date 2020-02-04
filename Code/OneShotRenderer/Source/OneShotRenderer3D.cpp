@@ -56,4 +56,5 @@ void COneShotRenderer3D::Resize()
 void COneShotRenderer3D::Shutdown()
 {
 	OSE_SAFE_SHUTDOWN(m_pRenderer3D);
+	OSE_SAFE_SHUTDOWN(g_pBasicCamera);
 }

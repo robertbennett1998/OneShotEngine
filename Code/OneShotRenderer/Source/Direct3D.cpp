@@ -209,32 +209,32 @@ bool CDirect3D::UnregisterRenderable(IRenderable* pRenderable)
 
 IVertexShader* CDirect3D::CreateVertexShader()
 {
-	return new CD3D11VertexShader(this);
+	return OSE_NEW(CD3D11VertexShader(this));
 }
 
 IPixelShader* CDirect3D::CreatePixelShader()
 {
-	return new CD3D11PixelShader(this);
+	return OSE_NEW(CD3D11PixelShader(this));
 }
 
 IConstantBuffer* CDirect3D::CreateConstantBuffer()
 {
-	return new CD3D11ConstantBuffer(this);
+	return OSE_NEW(CD3D11ConstantBuffer(this));
 }
 
 IVertexBuffer* CDirect3D::CreateVertexBuffer()
 {
-	return new CD3D11VertexBuffer(this);
+	return OSE_NEW(CD3D11VertexBuffer(this));
 }
 
 IIndexBuffer* CDirect3D::CreateIndexBuffer()
 {
-	return new CD3D11IndexBuffer(this);
+	return OSE_NEW(CD3D11IndexBuffer(this));
 }
 
 ITexture2D* CDirect3D::CreateTexture2D()
 {
-	return new CD3D11Texture2D(this);
+	return OSE_NEW(CD3D11Texture2D(this));
 }
 
 inline bool CDirect3D::CreateD3D11Device()

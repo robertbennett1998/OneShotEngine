@@ -97,6 +97,7 @@
       <PreprocessorDefinitions>_DEBUG;_ONE_SHOT_RENDERER_DLL;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -177,12 +178,15 @@
     <ClInclude Include="Include\OneShotRenderer3D.h" />
     <ClInclude Include="Include\pch.h" />
     <ClInclude Include="Include\Interfaces\IRenderer3D.h" />
+    <ClInclude Include="Include\Shaders\BasicColourShaderProgram.h" />
+    <ClInclude Include="Include\Shaders\BasicTextureShaderProgram.h" />
     <ClInclude Include="Include\Shaders\D3D11PixelShader.h" />
     <ClInclude Include="Include\Shaders\D3D11VertexShader.h" />
     <ClInclude Include="Include\Shaders\Interfaces\IPixelShader.h" />
     <ClInclude Include="Include\Shaders\Interfaces\IShaderProgram.h" />
     <ClInclude Include="Include\Shaders\Interfaces\IVertexShader.h" />
     <ClInclude Include="Include\Renderables\Interfaces\IRenderable.h" />
+    <ClInclude Include="Include\Shaders\ShaderParams.h" />
     <ClInclude Include="Source\Buffers\Interfaces\IConstantBuffer.cpp" />
     <ClInclude Include="Source\Buffers\Interfaces\IIndexBuffer.cpp" />
     <ClInclude Include="Source\Buffers\Interfaces\ITexture2D.cpp" />
@@ -210,9 +214,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Interfaces\IRenderer3D.cpp" />
+    <ClCompile Include="Source\Shaders\BasicColourShaderProgram.cpp" />
+    <ClCompile Include="Source\Shaders\BasicTextureShaderProgram.cpp" />
     <ClCompile Include="Source\Shaders\D3D11PixelShader.cpp" />
     <ClCompile Include="Source\Shaders\D3D11VertexShader.cpp" />
     <ClCompile Include="Source\Shaders\Interfaces\IShaderProgram.cpp" />
+    <ClCompile Include="Source\Shaders\ShaderParams.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

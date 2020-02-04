@@ -81,7 +81,7 @@ int main()
 	if (FAILED(RegisterClass(&wndCls)))
 		return -1;
 
-	HWND hWnd = CreateWindow(L"renderertest", L"Renderer Test", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 800, 600, NULL, NULL, hCurrInstance, NULL);
+	HWND hWnd = CreateWindow(L"renderertest", L"Renderer Test", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, configFile.Get<int>("Configuration.Window.Width"), configFile.Get<int>("Configuration.Window.Height"), NULL, NULL, hCurrInstance, NULL);
 	if (!hWnd)
 		return -2;
 
@@ -108,4 +108,6 @@ int main()
 	} while (msg.message != WM_QUIT);
 
 	OSE_SAFE_SHUTDOWN(g_pRenderer);
+
+	OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetRootHeap()->WriteHeapDetailsToString());
 }

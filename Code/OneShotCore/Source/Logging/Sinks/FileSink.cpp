@@ -27,6 +27,7 @@ std::shared_ptr<CFileSink> CFileSink::CreateFileSink(std::string sFilePath, std:
 
 bool CFileSink::Initialize(std::string sFilePath, std::string sFileName)
 {
+	//Open the file and make sure it is cleared when the file sink is created
 	if (!CVirtualFileSystem::GetInstance()->CreateFileStream(sFilePath, sFileName, m_ofLogStream))
 		return false;
 
@@ -36,4 +37,5 @@ bool CFileSink::Initialize(std::string sFilePath, std::string sFileName)
 void CFileSink::Output(std::string sOut)
 {
 	m_ofLogStream << sOut;
+	m_ofLogStream.flush();
 }

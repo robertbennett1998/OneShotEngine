@@ -1,9 +1,10 @@
-#include "stdafx.h"
-#include "DirectX/Shaders/BasicColourShaderProgram.h"
+#include "pch.h"
+#include "Shaders/BasicColourShaderProgram.h"
 
 using namespace DirectX;
+using namespace OneShotRenderer;
 
-CBasicColourShaderProgram::CBasicColourShaderProgram(I3DRenderer* p3DRenderer) :
+CBasicColourShaderProgram::CBasicColourShaderProgram(OneShotRenderer::IRenderer3D* p3DRenderer) :
 m_bInitialized(false),
 m_p3DRenderer(p3DRenderer),
 m_pVertexShader(nullptr),
@@ -38,11 +39,11 @@ bool CBasicColourShaderProgram::Initialize()
 		polygonLayout[1].InstanceDataStepRate = 0;
 
 		m_pVertexShader = m_p3DRenderer->CreateVertexShader();
-		if (!m_pVertexShader->Initialize("C:\\Programming\\Game_Engine\\Shaders\\BasicColour\\BasicColour.vs", &polygonLayout, 2, "main"))
+		if (!m_pVertexShader->Initialize("/Shaders/BasicColour/BasicColour.vs", &polygonLayout, 2, "main"))
 			return false;
 
 		m_pPixelShader = m_p3DRenderer->CreatePixelShader();
-		if (!m_pPixelShader->Initialize("C:\\Programming\\Game_Engine\\Shaders\\BasicColour\\BasicColour.ps", "main"))
+		if (!m_pPixelShader->Initialize("/Shaders/BasicColour/BasicColour.ps", "main"))
 			return false;
 
 		static XMMATRIX world = XMMatrixIdentity();
@@ -60,7 +61,7 @@ bool CBasicColourShaderProgram::Initialize()
 		view = XMMatrixTranspose(view);
 		proj = XMMatrixTranspose(proj);
 
-		m_pMatrixBuffer = new CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
+		m_pMatrixBuffer = new OneShotRenderer::CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
 		if (!m_pMatrixBuffer->Initiailze(world, view, proj))
 			return false;
 
@@ -86,9 +87,9 @@ void CBasicColourShaderProgram::Shutdown()
 {
 	if (m_bInitialized)
 	{
-		SafeShutdown(m_pPixelShader);
-		SafeShutdown(m_pMatrixBuffer);
-		SafeShutdown(m_pVertexShader);
+		OSE_SAFE_SHUTDOWN(m_pPixelShader);
+		OSE_SAFE_SHUTDOWN(m_pMatrixBuffer);
+		OSE_SAFE_SHUTDOWN(m_pVertexShader);
 
 		m_bInitialized = false;
 	}

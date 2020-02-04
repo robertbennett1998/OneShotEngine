@@ -2,6 +2,8 @@
 #include "Shaders/D3D11VertexShader.h"
 #include "Direct3D.h"
 
+#include <OneShotCore/Include/FileUtillities/VirtualFileSystem.h>
+
 using namespace OneShotRenderer;
 
 static std::wstring StringToWideString(const std::string& s)
@@ -35,6 +37,7 @@ bool CD3D11VertexShader::Initialize(std::string sVSFile, void* pInputLayoutDesc,
 	{
 		HRESULT hRes = S_OK;
 
+		sVSFile = CVirtualFileSystem::GetInstance()->ResolvePhysicalPath(sVSFile);
 		ID3D10Blob* pErrBlob = nullptr;
 		ID3D10Blob* pVSBlob = nullptr;
 		hRes = D3DCompileFromFile(StringToWideString(sVSFile).c_str(), NULL, NULL, sVSEntryPoint.c_str(), "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pVSBlob, &pErrBlob);

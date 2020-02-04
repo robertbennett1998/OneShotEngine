@@ -1,9 +1,10 @@
-#include "stdafx.h"
-#include "DirectX/Shaders/BasicTextureShaderProgram.h"
+#include "pch.h"
+#include "Shaders/BasicTextureShaderProgram.h"
 
 using namespace DirectX;
+using namespace OneShotRenderer;
 
-CBasicTextureShaderProgram::CBasicTextureShaderProgram(I3DRenderer* p3DRenderer) :
+CBasicTextureShaderProgram::CBasicTextureShaderProgram(IRenderer3D* p3DRenderer) :
 m_bInitialized(false),
 m_p3DRenderer(p3DRenderer),
 m_pVertexShader(nullptr),
@@ -49,11 +50,11 @@ bool CBasicTextureShaderProgram::Initialize()
 		polygonLayout[2].InstanceDataStepRate = 0;
 
 		m_pVertexShader = m_p3DRenderer->CreateVertexShader();
-		if (!m_pVertexShader->Initialize("C:\\Programming\\Game_Engine\\Shaders\\BasicTexture\\BasicTexture.vs", &polygonLayout, 3, "main"))
+		if (!m_pVertexShader->Initialize("/Shaders/BasicTexture/BasicTexture.vs", &polygonLayout, 2, "main"))
 			return false;
 
 		m_pPixelShader = m_p3DRenderer->CreatePixelShader();
-		if (!m_pPixelShader->Initialize("C:\\Programming\\Game_Engine\\Shaders\\BasicTexture\\BasicTexture.ps", "main"))
+		if (!m_pPixelShader->Initialize("/Shaders/BasicTexture/BasicTexture.ps", "main"))
 			return false;
 
 		m_xmmProjectionMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV4, m_p3DRenderer->GetViewportWidth() / m_p3DRenderer->GetViewportHeight(), 0.01f, 1000.0f);
@@ -92,9 +93,9 @@ void CBasicTextureShaderProgram::Shutdown()
 {
 	if (m_bInitialized)
 	{
-		SafeShutdown(m_pPixelShader);
-		SafeShutdown(m_pMatrixBuffer);
-		SafeShutdown(m_pVertexShader);
+		OSE_SAFE_SHUTDOWN(m_pPixelShader);
+		OSE_SAFE_SHUTDOWN(m_pMatrixBuffer);
+		OSE_SAFE_SHUTDOWN(m_pVertexShader);
 
 		m_bInitialized = false;
 	}

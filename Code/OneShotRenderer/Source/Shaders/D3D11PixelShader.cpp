@@ -2,6 +2,8 @@
 #include "Shaders/D3D11PixelShader.h"
 #include "Direct3D.h"
 
+#include <OneShotCore/Include/FileUtillities/VirtualFileSystem.h>
+
 using namespace OneShotRenderer;
 
 static std::wstring StringToWideString(const std::string& s)
@@ -33,6 +35,7 @@ bool CD3D11PixelShader::Initialize(std::string sPSFile, std::string sPSEntryPoin
 	{
 		HRESULT hRes = S_OK;
 
+		sPSFile = CVirtualFileSystem::GetInstance()->ResolvePhysicalPath(sPSFile);
 		ID3D10Blob* pErrBlob = nullptr;
 		ID3D10Blob* pPSBlob = nullptr;
 		hRes = D3DCompileFromFile(StringToWideString(sPSFile).c_str(), NULL, NULL, sPSEntryPoint.c_str(), "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pPSBlob, &pErrBlob);
