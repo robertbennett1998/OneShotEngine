@@ -2,6 +2,10 @@
 #ifndef ONE_SHOT_CORE_VIRTUAL_FILE_SYSTEM_H
 #define ONE_SHOT_CORE_VIRTUAL_FILE_SYSTEM_H
 
+#include <stdlib.h>
+#include <string>
+#include <fstream>
+
 class ONE_SHOT_CORE_DLL CVirtualFileSystem
 {
 	public:

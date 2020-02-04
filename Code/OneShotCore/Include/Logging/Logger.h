@@ -2,8 +2,11 @@
 #ifndef ONE_SHOT_CORE_LOGGER_H
 #define ONE_SHOT_CORE_LOGGER_H
 
+#include <stdlib.h>
 #include <ctime>
 #include <chrono>
+#include <sstream>
+#include <string>
 
 #include "Sinks/Interfaces/ILogSink.h"
 

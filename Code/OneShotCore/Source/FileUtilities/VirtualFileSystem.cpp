@@ -157,11 +157,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileNa
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: %\t\n\tVirtual path: %\t\n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: %\n\tVirtual path: %\n\tFile name %", sPhysicalPath, sPath, sFileName);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::ofstream opened: %\t\n Virtual path: %\t\n File name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::ofstream opened: %\n\t Virtual path: %\n\t File name %", sPhysicalPath, sPath, sFileName);
 	return true;
 }
 

@@ -1,0 +1,40 @@
+Texture2D shaderTexture;
+SamplerState SampleType;
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 texcoord : TEXCOORD0;
+    float3 normal : NORMAL;
+};
+
+float4 main(PixelInputType input) : SV_TARGET
+{
+    float3 sunPos;
+    float4 diffColour;
+    float3 sunLookAt;
+
+    sunPos.x = 0.0f;
+    sunPos.y = 5.0f;
+    sunPos.z = -100.0f;
+
+    diffColour.x = 1.0f;
+    diffColour.y = 1.0f;
+    diffColour.z = 1.0f;
+    diffColour.w = 1.0f;
+
+    sunLookAt.x = 0.0f;
+    sunLookAt.y = 0.0f;
+    sunLookAt.z = 0.0f;
+
+    float3 sunDir = sunLookAt - sunPos;
+    sunDir = -sunDir;
+    sunDir = normalize(sunDir);
+    input.normal = normalize(input.normal);
+
+    float intensity = saturate(dot(input.normal, sunDir));
+
+    float4 texColour = shaderTexture.Sample(SampleType, input.texcoord);
+    float4 finLightColour = saturate(intensity * diffColour);
+
+    return texColour * finLightColour;
+}

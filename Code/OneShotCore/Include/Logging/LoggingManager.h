@@ -3,6 +3,10 @@
 #define ONE_SHOT_CORE_LOGGER_MANAGER_H
 
 #include "Logger.h"
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <map>
 
 #define EXPAND(x) x
 #define OSE_GET_CREATE_LOGGER_MACRO(_1,_2,NAME,...) NAME

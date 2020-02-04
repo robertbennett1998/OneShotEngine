@@ -2,6 +2,10 @@
 #ifndef ONE_SHOT_CORE_MEMORY_MANAGER_H
 #define ONE_SHOT_CORE_MEMORY_MANAGER_H
 
+#include <stdlib.h>
+#include <string>
+#include <map>
+
 #include "Interfaces/IHeap.h"
 
 class ONE_SHOT_CORE_DLL CMemoryManager
@@ -68,6 +72,7 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x
+	#define OSE_SAFE_SHUTDOWN(x) if (x != nullptr) { x->Shutdown(); OSE_DELETE(x); x = nullptr; }
 #else
 	//currently does nothing in non debug mode	
 	#define ALLOCATE_ON_HEAP(heapName)
@@ -80,6 +85,7 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x
+	#define OSE_SAFE_SHUTDOWN(x) if (x != nullptr) { x->Shutdown(); OSE_DELETE(x); x = nullptr; }
 #endif
 
 //Overloads declarations
