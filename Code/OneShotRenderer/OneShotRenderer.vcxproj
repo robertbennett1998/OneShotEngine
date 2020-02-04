@@ -174,7 +174,13 @@
     <ClInclude Include="Include\Cameras\BasicCamera.h" />
     <ClInclude Include="Include\Cameras\Interfaces\ICamera.h" />
     <ClInclude Include="Include\Geometry.h" />
+    <ClInclude Include="Include\Image.h" />
+    <ClInclude Include="Include\ImageLoaderFactory.h" />
+    <ClInclude Include="Include\Interfaces\IImage.h" />
+    <ClInclude Include="Include\Interfaces\IImageLoader.h" />
     <ClInclude Include="Include\Material.h" />
+    <ClInclude Include="Include\MaterialLibrary.h" />
+    <ClInclude Include="Include\MaterialLoader.h" />
     <ClInclude Include="Include\OneShotRenderer3D.h" />
     <ClInclude Include="Include\pch.h" />
     <ClInclude Include="Include\Interfaces\IRenderer3D.h" />
@@ -187,6 +193,7 @@
     <ClInclude Include="Include\Shaders\Interfaces\IVertexShader.h" />
     <ClInclude Include="Include\Renderables\Interfaces\IRenderable.h" />
     <ClInclude Include="Include\Shaders\ShaderParams.h" />
+    <ClInclude Include="Include\TgaLoader.h" />
     <ClInclude Include="Source\Buffers\Interfaces\IConstantBuffer.cpp" />
     <ClInclude Include="Source\Buffers\Interfaces\IIndexBuffer.cpp" />
     <ClInclude Include="Source\Buffers\Interfaces\ITexture2D.cpp" />
@@ -205,7 +212,13 @@
     <ClCompile Include="Source\Cameras\BasicCamera.cpp" />
     <ClCompile Include="Source\Direct3D.cpp" />
     <ClCompile Include="Source\Geometry.cpp" />
+    <ClCompile Include="Source\Image.cpp" />
+    <ClCompile Include="Source\ImageLoaderFactory.cpp" />
+    <ClCompile Include="Source\Interfaces\IImageLoader.cpp" />
+    <ClCompile Include="Source\Interfaces\IImage.cpp" />
     <ClCompile Include="Source\Material.cpp" />
+    <ClCompile Include="Source\MaterialLibrary.cpp" />
+    <ClCompile Include="Source\MaterialLoader.cpp" />
     <ClCompile Include="Source\OneShotRenderer3D.cpp" />
     <ClCompile Include="Source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -220,6 +233,7 @@
     <ClCompile Include="Source\Shaders\D3D11VertexShader.cpp" />
     <ClCompile Include="Source\Shaders\Interfaces\IShaderProgram.cpp" />
     <ClCompile Include="Source\Shaders\ShaderParams.cpp" />
+    <ClCompile Include="Source\TgaLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

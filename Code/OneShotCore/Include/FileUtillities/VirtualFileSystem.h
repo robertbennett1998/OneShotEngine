@@ -15,9 +15,9 @@ class ONE_SHOT_CORE_DLL CVirtualFileSystem
 		bool Unmount(std::string sVirtualPath);
 		std::string ResolvePhysicalPath(std::string sVirtualPath) const;
 
-		bool CreateFileStream(std::string sPath, std::string sFileName, std::fstream& fOut, std::ios_base::openmode openMode = std::fstream::in | std::fstream::out);
-		bool CreateFileStream(std::string sPath, std::string sFileName, std::ifstream& fOut, std::ios_base::openmode openMode = std::fstream::in);
-		bool CreateFileStream(std::string sPath, std::string sFileName, std::ofstream& fOut, std::ios_base::openmode openMode = std::fstream::out);
+		bool CreateFileStream(std::string sPath, std::fstream& fOut, std::ios_base::openmode openMode = std::fstream::in | std::fstream::out);
+		bool CreateFileStream(std::string sPath, std::ifstream& fOut, std::ios_base::openmode openMode = std::fstream::in);
+		bool CreateFileStream(std::string sPath, std::ofstream& fOut, std::ios_base::openmode openMode = std::fstream::out);
 
 		static bool DoesDirectoryPathExist(std::string sPath);
 		static bool DoesFilePathExist(std::string sPath);

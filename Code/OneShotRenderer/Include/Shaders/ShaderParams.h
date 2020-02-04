@@ -1,6 +1,6 @@
 #pragma once
-#ifndef GAME_ENGINE_RENDERER_SHADER_PARAMS_H
-#define GAME_ENGINE_RENDERER_SHADER_PARAMS_H
+#ifndef ONE_SHOT_RENDERER_SHADER_PARAMS_H
+#define ONE_SHOT_RENDERER_SHADER_PARAMS_H
 
 #include "Interfaces/IRenderer3D.h"
 #include "Buffers/Interfaces/IConstantBuffer.h"

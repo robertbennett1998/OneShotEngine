@@ -10,12 +10,12 @@ class ONE_SHOT_CORE_DLL CFileSink : public ILogSink
 		CFileSink();
 		~CFileSink();
 
-		static std::shared_ptr<CFileSink> CreateFileSink(std::string sFilePath, std::string sFileName);
+		static std::shared_ptr<CFileSink> CreateFileSink(std::string sFilePath);
 
 		void Output(std::string sOut) override;
 
 	private:
-		bool Initialize(std::string sFilePath, std::string sFileName);
+		bool Initialize(std::string sFilePath);
 
 		std::ofstream m_ofLogStream;
 };

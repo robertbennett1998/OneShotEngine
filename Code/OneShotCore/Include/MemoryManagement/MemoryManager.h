@@ -72,6 +72,8 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x
+	#define OSE_SAFE_DELETE(x) if (x != nullptr) { OSE_DELETE(x); x = nullptr; }
+	#define OSE_SAFE_DELETE_ARRAY(x) if (x != nullptr) { OSE_DELETE_ARRAY(x); x = nullptr; }
 	#define OSE_SAFE_SHUTDOWN(x) if (x != nullptr) { x->Shutdown(); OSE_DELETE(x); x = nullptr; }
 #else
 	//currently does nothing in non debug mode	
@@ -85,6 +87,8 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x
+	#define OSE_SAFE_DELETE(x) if (x != nullptr) { OSE_DELETE(x); x = nullptr; }
+	#define OSE_SAFE_DELETE_ARRAY(x) if (x != nullptr) { OSE_DELETE_ARRAY(x); x = nullptr; }
 	#define OSE_SAFE_SHUTDOWN(x) if (x != nullptr) { x->Shutdown(); OSE_DELETE(x); x = nullptr; }
 #endif
 

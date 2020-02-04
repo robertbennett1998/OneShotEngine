@@ -23,6 +23,7 @@
 
 #include <OneShotRenderer/Include/OneShotRenderer3D.h>
 #include <OneShotRenderer/Include/Direct3D.h>
+#include <OneShotRenderer/Include/MaterialLibrary.h>
 
 OneShotRenderer::COneShotRenderer3D* g_pRenderer = nullptr;
 
@@ -67,7 +68,7 @@ int main()
 		}
 	}
 
-	OSE_ADD_SINK("General", CFileSink::CreateFileSink("/Root/Logs", "General.log"));
+	OSE_ADD_SINK("General", CFileSink::CreateFileSink("/Root/Logs/General.log"));
 
 	HINSTANCE hCurrInstance = GetModuleHandleA(NULL);
 	WNDCLASS wndCls; ZeroMemory(&wndCls, sizeof(WNDCLASS));
@@ -89,6 +90,9 @@ int main()
 
 	if (!g_pRenderer->Initialize(hWnd))
 		return -3;
+
+	if (!OneShotRenderer::CMaterialLibrary::GetInstance()->RegisterMaterials("/Geometry/LumberJack/lumberJack.mtl"))
+		return -4;
 
 	OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetRootHeap()->WriteHeapDetailsToString());
 

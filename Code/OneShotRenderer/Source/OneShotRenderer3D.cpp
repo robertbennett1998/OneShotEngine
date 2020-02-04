@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "OneShotRenderer3D.h"
 #include "Cameras/BasicCamera.h"
+#include "MaterialLibrary.h"
 
 using namespace OneShotRenderer;
 
@@ -22,6 +23,8 @@ bool COneShotRenderer3D::Initialize(HWND hWnd)
 	{
 		if (!m_pRenderer3D)
 			return false;
+
+		CMaterialLibrary::CreateInstance(m_pRenderer3D);
 
 		g_pBasicCamera = OSE_NEW(CBasicCamera());
 		g_pBasicCamera->Initialize();
@@ -57,4 +60,5 @@ void COneShotRenderer3D::Shutdown()
 {
 	OSE_SAFE_SHUTDOWN(m_pRenderer3D);
 	OSE_SAFE_SHUTDOWN(g_pBasicCamera);
+	CMaterialLibrary::GetInstance()->Shutdown();
 }

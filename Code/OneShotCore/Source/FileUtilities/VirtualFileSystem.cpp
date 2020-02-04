@@ -120,48 +120,48 @@ std::string CVirtualFileSystem::ResolvePhysicalPath(std::string sPath) const
 	return sResolvedPath;
 }
 
-bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileName, std::fstream& fOut, std::ios_base::openmode openMode)
+bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::fstream& fOut, std::ios_base::openmode openMode)
 {
-	std::string sPhysicalPath = ResolvePhysicalPath(sPath) + sFileName;
+	std::string sPhysicalPath = ResolvePhysicalPath(sPath);
 	fOut = std::fstream(sPhysicalPath, openMode);
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::fstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_LOG_WARNING("General", "Couldn't open std::fstream: % \n\Argument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::fstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::fstream opened: % \n\Argument path: %\n", sPhysicalPath, sPath);
 	return true;
 }
 
-bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileName, std::ifstream& fOut, std::ios_base::openmode openMode)
+bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::ifstream& fOut, std::ios_base::openmode openMode)
 {
-	std::string sPhysicalPath = ResolvePhysicalPath(sPath) + sFileName;
+	std::string sPhysicalPath = ResolvePhysicalPath(sPath);
 	fOut = std::ifstream(sPhysicalPath, openMode);
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::ifstream: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_LOG_WARNING("General", "Couldn't open std::ifstream: % \nArgument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::ifstream opened: % \n\tVirtual path: % \n\tFile name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::ifstream opened: % \n\Argument path: %", sPhysicalPath, sPath);
 	return true;
 }
 
-bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::string sFileName, std::ofstream& fOut, std::ios_base::openmode openMode)
+bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::ofstream& fOut, std::ios_base::openmode openMode)
 {
-	std::string sPhysicalPath = ResolvePhysicalPath(sPath) + sFileName;
+	std::string sPhysicalPath = ResolvePhysicalPath(sPath);
 	fOut = std::ofstream(sPhysicalPath, openMode);
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: %\n\tVirtual path: %\n\tFile name %", sPhysicalPath, sPath, sFileName);
+		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: % \n\Argument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::ofstream opened: %\n\t Virtual path: %\n\t File name %", sPhysicalPath, sPath, sFileName);
+	OSE_LOG_INFO("General", "std::ofstream opened: % \n\Argument path: %\n", sPhysicalPath, sPath);
 	return true;
 }
 

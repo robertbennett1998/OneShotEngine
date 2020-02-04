@@ -17,7 +17,7 @@ CLoggingManager* CLoggingManager::GetInstance()
 		//TODO: Log warning if it did not work
 		if(CVirtualFileSystem::GetInstance()->Mount("/Logs", "/Root/Logs"))
 		{
-			genLogger->AddSink(CFileSink::CreateFileSink("/Logs", "General.log"));
+			genLogger->AddSink(CFileSink::CreateFileSink("/Logs/General.log"));
 		}
 	}
 
