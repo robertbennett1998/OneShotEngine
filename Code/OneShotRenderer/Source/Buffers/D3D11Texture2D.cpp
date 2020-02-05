@@ -54,6 +54,8 @@ bool CD3D11Texture2D::Initialize(std::string sTexturePath)
 		if (pImage == nullptr)
 			return false;
 
+		OSE_SAFE_DELETE(pImgLoader);
+
 		D3D11_TEXTURE2D_DESC t2ddesc; ZeroMemory(&t2ddesc, sizeof(D3D11_TEXTURE2D_DESC));
 		t2ddesc.Width = pImage->GetWidth();
 		t2ddesc.Height = pImage->GetHeight();

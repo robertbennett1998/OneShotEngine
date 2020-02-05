@@ -11,6 +11,7 @@ CMemoryManager* CMemoryManager::GetInstance()
 	{
 		sm_pInstance = new CMemoryManager();
 		sm_pInstance->m_pRootHeap = sm_pInstance->CreateHeap<CFreeAllocationHeap>("root", 8);
+		sm_pInstance->CreateHeap<CFreeAllocationHeap>("lifetime", 8, sm_pInstance->m_pRootHeap);
 
 		auto memLogger = CLoggingManager::GetInstance()->CreateLogger("Memory");
 		memLogger->AddSink(CFileSink::CreateFileSink("/Logs/Memory.log"));

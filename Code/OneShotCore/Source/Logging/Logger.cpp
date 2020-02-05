@@ -39,12 +39,11 @@ bool CLogger::RemoveSibling(std::shared_ptr<CLogger> logger)
 std::string CLogger::GetCurrentLocalTime()
 {
 	std::time_t ttNow = m_SystemClock.to_time_t(m_SystemClock.now());
-	char* pNow = new char[26];
+	char now[26];
 	struct tm buf;
 	::gmtime_s(&buf, &ttNow);
-	std::strftime(pNow, 26, "%d/%m/%y - %H:%M:%S", &buf);
-	std::string sNow = std::string(pNow);
-	delete[] (pNow);
+	std::strftime(now, 26, "%d/%m/%y - %H:%M:%S", &buf);
+	std::string sNow = std::string(now);
 
 	return sNow;
 }

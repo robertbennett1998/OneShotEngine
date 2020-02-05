@@ -69,6 +69,8 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	#define OSE_NEW_ARRAY_2(x, count) new(__LINE__, __FILE__) x[count]
 	#define OSE_NEW_ARRAY_3(x, count, heap) new(__LINE__, __FILE__, heap) x[count]
 	#define OSE_NEW_ARRAY(...) EXPAND(GET_OSE_NEW_ARRAY_MACRO(__VA_ARGS__, OSE_NEW_ARRAY_3, OSE_NEW_ARRAY_2)(__VA_ARGS__))
+	#define OSE_NEW_LIFETIME(x) OSE_NEW(x, "lifetime")
+	#define OSE_NEW_SUB new(__LINE__, __FILE__)
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x
@@ -84,6 +86,8 @@ class ONE_SHOT_CORE_DLL CMemoryManager
 	#define OSE_NEW_ARRAY_2(x, count) new x[count]
 	#define OSE_NEW_ARRAY_3(x, count, heap) new(heap) x[count]
 	#define OSE_NEW_ARRAY(...) EXPAND(GET_OSE_NEW_ARRAY_MACRO(__VA_ARGS__, OSE_NEW_ARRAY_3, OSE_NEW_ARRAY_2)(__VA_ARGS__))
+	#define OSE_NEW_LIFETIME(x) OSE_NEW(x, "lifetime")
+	#define OSE_NEW_SUB new
 	//this is literally only there for consistency
 	#define OSE_DELETE(x) delete x
 	#define OSE_DELETE_ARRAY(x) delete[] x

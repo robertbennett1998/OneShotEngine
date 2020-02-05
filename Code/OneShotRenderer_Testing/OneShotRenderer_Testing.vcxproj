@@ -75,7 +75,7 @@
     <OutDir>$(SolutionDir)../bin/$(Platform)/$(Configuration)/</OutDir>
     <IntDir>$(SolutionDir)../bin/$(Platform)/$(Configuration)/InitDir/$(ProjectName)/</IntDir>
     <LibraryPath>$(SolutionDir)../bin/$(Platform)/$(Configuration)/;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <IncludePath>$(SolutionDir)/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)/;$(SolutionDir)/OneShotRenderer/Include/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>

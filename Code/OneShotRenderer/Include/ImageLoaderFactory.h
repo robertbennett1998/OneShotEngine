@@ -13,7 +13,7 @@ namespace OneShotRenderer
 			{
 				if (sm_pInstance == nullptr)
 				{
-					sm_pInstance = new CImageLoaderFactory();
+					sm_pInstance = OSE_NEW_LIFETIME(CImageLoaderFactory());
 				}
 
 				return sm_pInstance;
@@ -24,10 +24,10 @@ namespace OneShotRenderer
 				sFileExtension.erase(std::remove(sFileExtension.begin(), sFileExtension.end(), '\0'), sFileExtension.end());
 				if (sFileExtension == "tga")
 				{
-					return new CTgaLoader();
+					return OSE_NEW(CTgaLoader());
 				}
 
-				return nullptr;// new CTgaLoader();
+				return nullptr;// OSE_NEW(CTgaLoader());
 			}
 
 		private:

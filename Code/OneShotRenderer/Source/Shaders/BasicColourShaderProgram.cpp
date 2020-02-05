@@ -9,7 +9,10 @@ m_bInitialized(false),
 m_p3DRenderer(p3DRenderer),
 m_pVertexShader(nullptr),
 m_pPixelShader(nullptr),
-m_pMatrixBuffer(nullptr)
+m_pMatrixBuffer(nullptr),
+m_xmmWorldMatrix(XMMatrixIdentity()),
+m_xmmViewMatrix(XMMatrixIdentity()),
+m_xmmProjectionMatrix(XMMatrixIdentity())
 {
 }
 
@@ -61,7 +64,7 @@ bool CBasicColourShaderProgram::Initialize()
 		view = XMMatrixTranspose(view);
 		proj = XMMatrixTranspose(proj);
 
-		m_pMatrixBuffer = new OneShotRenderer::CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
+		m_pMatrixBuffer = OSE_NEW_SUB OneShotRenderer::CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
 		if (!m_pMatrixBuffer->Initiailze(world, view, proj))
 			return false;
 
@@ -81,6 +84,8 @@ void CBasicColourShaderProgram::Bind()
 
 void CBasicColourShaderProgram::Resize()
 {
+	m_xmmProjectionMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV4, m_p3DRenderer->GetViewportWidth() / m_p3DRenderer->GetViewportHeight(), 0.01f, 1000.0f);
+	m_pMatrixBuffer->SetValues(XMMatrixTranspose(m_xmmWorldMatrix), XMMatrixTranspose(m_xmmViewMatrix), XMMatrixTranspose(m_xmmProjectionMatrix));
 }
 
 void CBasicColourShaderProgram::Shutdown()
@@ -93,4 +98,16 @@ void CBasicColourShaderProgram::Shutdown()
 
 		m_bInitialized = false;
 	}
+}
+
+void CBasicColourShaderProgram::SetWorldMatrix(DirectX::XMMATRIX xmmWorld)
+{
+	m_xmmWorldMatrix = xmmWorld;
+	m_pMatrixBuffer->SetValues(XMMatrixTranspose(m_xmmWorldMatrix), XMMatrixTranspose(m_xmmViewMatrix), XMMatrixTranspose(m_xmmProjectionMatrix));
+}
+
+void CBasicColourShaderProgram::Update()
+{
+	m_xmmViewMatrix = m_p3DRenderer->GetBoundCamera()->GetViewMatrix();
+	m_pMatrixBuffer->SetValues(XMMatrixTranspose(m_xmmWorldMatrix), XMMatrixTranspose(m_xmmViewMatrix), XMMatrixTranspose(m_xmmProjectionMatrix));
 }

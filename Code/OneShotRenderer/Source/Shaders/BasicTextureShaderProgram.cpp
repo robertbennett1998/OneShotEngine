@@ -50,7 +50,7 @@ bool CBasicTextureShaderProgram::Initialize()
 		polygonLayout[2].InstanceDataStepRate = 0;
 
 		m_pVertexShader = m_p3DRenderer->CreateVertexShader();
-		if (!m_pVertexShader->Initialize("/Shaders/BasicTexture/BasicTexture.vs", &polygonLayout, 2, "main"))
+		if (!m_pVertexShader->Initialize("/Shaders/BasicTexture/BasicTexture.vs", &polygonLayout, 3, "main"))
 			return false;
 
 		m_pPixelShader = m_p3DRenderer->CreatePixelShader();
@@ -59,7 +59,7 @@ bool CBasicTextureShaderProgram::Initialize()
 
 		m_xmmProjectionMatrix = XMMatrixPerspectiveFovLH(XM_PIDIV4, m_p3DRenderer->GetViewportWidth() / m_p3DRenderer->GetViewportHeight(), 0.01f, 1000.0f);
 
-		m_pMatrixBuffer = new CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
+		m_pMatrixBuffer = OSE_NEW_SUB CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>(m_p3DRenderer, 0, CONSTANT_BUFFER_USAGE::VertextShader);
 		if (!m_pMatrixBuffer->Initiailze(XMMatrixTranspose(m_xmmWorldMatrix), XMMatrixTranspose(m_xmmViewMatrix), XMMatrixTranspose(m_xmmProjectionMatrix)))
 			return false;
 

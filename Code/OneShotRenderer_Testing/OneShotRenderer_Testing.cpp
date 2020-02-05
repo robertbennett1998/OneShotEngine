@@ -24,8 +24,98 @@
 #include <OneShotRenderer/Include/OneShotRenderer3D.h>
 #include <OneShotRenderer/Include/Direct3D.h>
 #include <OneShotRenderer/Include/MaterialLibrary.h>
+#include <OneShotRenderer/Include/Renderables/Interfaces/IRenderable.h>
+#include <OneShotRenderer/Include/GeometryManager.h>
+#include <OneShotRenderer/Include/Shaders/BasicTextureShaderProgram.h>
+#include <OneShotRenderer/Include/Shaders/ShaderManager.h>
+#include <OneShotRenderer/Include/Shaders/BasicColourShaderProgram.h>
+#include <OneShotRenderer/Include/Renderables/Biped.h>
 
+using namespace OneShotRenderer;
 OneShotRenderer::COneShotRenderer3D* g_pRenderer = nullptr;
+
+class CLumberJack : public IRenderable
+{
+public:
+	bool Initialize() override;
+	void Bind() override;
+	void Shutdown() override;
+	void Hide() override;
+	void Show() override;
+	void ToggleVisible() override;
+	const CGeometry* GetGeometry() const override;
+	const bool GetShouldRender() const override;
+	const IShaderProgram* GetShaderProgram() const override;
+	void SetWorldMatrix(DirectX::XMMATRIX xmmWorld);
+private:
+	const CGeometry* m_pGeometry;
+	bool m_bShouldRender;
+	IShaderProgram* m_pShaderProgram;
+	DirectX::XMMATRIX m_xmmWorldMatrix;
+};
+
+bool CLumberJack::Initialize()
+{
+	CGeometryManager* pGeomManager = CGeometryManager::GetInstance();
+	if (pGeomManager == nullptr)
+		return false;
+
+	m_pGeometry = pGeomManager->GetGeomInstance("lumberJack");
+	if (m_pGeometry == nullptr)
+		return false;
+
+	m_pShaderProgram = CShaderManager::GetInstance()->GetShaderInstance<CBasicTextureShaderProgram>("BasicTexture");
+	if (m_pShaderProgram == nullptr)
+		return false;
+
+	m_bShouldRender = true;
+
+}
+
+void CLumberJack::Bind()
+{
+	((CBasicTextureShaderProgram*)m_pShaderProgram)->SetWorldMatrix(m_xmmWorldMatrix);
+	m_pShaderProgram->Bind();
+}
+
+void CLumberJack::Shutdown()
+{
+}
+
+void CLumberJack::Hide()
+{
+	m_bShouldRender = false;
+}
+
+void CLumberJack::Show()
+{
+	m_bShouldRender = true;
+}
+
+void CLumberJack::ToggleVisible()
+{
+	m_bShouldRender = !m_bShouldRender;
+}
+
+const CGeometry* CLumberJack::GetGeometry() const
+{
+	return m_pGeometry;
+}
+
+const bool CLumberJack::GetShouldRender() const
+{
+	return m_bShouldRender;
+}
+
+const IShaderProgram* CLumberJack::GetShaderProgram() const
+{
+	return m_pShaderProgram;
+}
+
+void CLumberJack::SetWorldMatrix(DirectX::XMMATRIX xmmWorld)
+{
+	m_xmmWorldMatrix = xmmWorld;
+}
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -86,15 +176,54 @@ int main()
 	if (!hWnd)
 		return -2;
 
-	g_pRenderer = OSE_NEW(OneShotRenderer::COneShotRenderer3D(new OneShotRenderer::CDirect3D()));
+	auto pDirect3D = OSE_NEW(OneShotRenderer::CDirect3D());
+	g_pRenderer = OSE_NEW(OneShotRenderer::COneShotRenderer3D(pDirect3D));
 
 	if (!g_pRenderer->Initialize(hWnd))
 		return -3;
 
-	if (!OneShotRenderer::CMaterialLibrary::GetInstance()->RegisterMaterials("/Geometry/LumberJack/lumberJack.mtl"))
+	if (!CShaderManager::GetInstance()->RegisterShaderType<CBasicTextureShaderProgram>("BasicTexture"))
 		return -4;
 
+	if (!OneShotRenderer::CMaterialLibrary::GetInstance()->RegisterMaterials("/Geometry/LumberJack/lumberJack.mtl"))
+		return -5;
+
+	if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/LumberJack/lumberJack.obj"))
+		return -6;
+
+	CLumberJack lumberJack;
+	if (!lumberJack.Initialize())
+		return -7;
+
+	lumberJack.SetWorldMatrix(DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+
+	if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&lumberJack))
+		return -8;
+
+	//TODO: Extend the geometry framework to allow different types...
+	//if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/Biped/Biped.obj"))
+	//	return -9;
+
+	//CBiped biped;
+	//if (!biped.Initialize())
+	//	return -10;
+
+	//biped.SetWorldMatrix(DirectX::XMMatrixTranslation(3.0f, 0.0f, 0.0f));
+
+	//if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&biped))
+	//	return -11;
+
+	//CBiped biped2;
+	//if (!biped2.Initialize())
+	//	return -12;
+
+	//biped2.SetWorldMatrix(DirectX::XMMatrixTranslation(-3.0f, 0.0f, 0.0f));
+
+	//if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&biped2))
+	//	return -13;
+
 	OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetRootHeap()->WriteHeapDetailsToString());
+	//OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetHeap("lifetime")->WriteHeapDetailsToString());
 
 	MSG msg; ZeroMemory(&msg, sizeof(MSG));
 	do
@@ -114,4 +243,5 @@ int main()
 	OSE_SAFE_SHUTDOWN(g_pRenderer);
 
 	OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetRootHeap()->WriteHeapDetailsToString());
+	//OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetHeap("lifetime")->WriteHeapDetailsToString());
 }

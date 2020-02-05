@@ -25,8 +25,11 @@ namespace OneShotRenderer
 
 				void Bind()
 				{
-					pIndexBuffer->Bind();
-					pMaterial->Bind(0);
+					if (pIndexBuffer != nullptr)
+						pIndexBuffer->Bind();
+
+					if (pMaterial != nullptr)
+						pMaterial->Bind(0);
 				}
 
 				~SubGeometry()

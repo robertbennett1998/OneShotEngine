@@ -9,7 +9,7 @@ CVirtualFileSystem* CVirtualFileSystem::GetInstance()
 {
 	if (sm_pInstance == nullptr)
 	{
-		sm_pInstance = new CVirtualFileSystem();
+		sm_pInstance = new CVirtualFileSystem(); //Cannot create using memory manager as it will not create the log because root is not registered yet...
 		std::string sAppDataStorePhysicalPath = GetAppDataStoreFilePath();
 		if(sAppDataStorePhysicalPath == "")
 		{
@@ -100,12 +100,10 @@ std::string CVirtualFileSystem::ResolvePhysicalPath(std::string sPath) const
 
 	if (bIsFile)
 	{
+		//TODO: Not sure on error handlign with regards to this
 		std::string sResolvedPath = mountIter->second + sPath.erase(0, szPos + 1);
 		if (!DoesFilePathExist(sResolvedPath))
-		{
 			OSE_DEBUG_LOG_WARNING("General", "File with resolved path(%) doesn't exist", sResolvedPath);
-			return "";
-		}
 
 		return sResolvedPath;
 	}
@@ -127,11 +125,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::fstream& fOut,
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::fstream: % \n\Argument path: %\n", sPhysicalPath, sPath);
+		OSE_LOG_WARNING("General", "Couldn't open std::fstream: % \n\tArgument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::fstream opened: % \n\Argument path: %\n", sPhysicalPath, sPath);
+	OSE_LOG_INFO("General", "std::fstream opened: % \n\tArgument path: %\n", sPhysicalPath, sPath);
 	return true;
 }
 
@@ -142,11 +140,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::ifstream& fOut
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::ifstream: % \nArgument path: %\n", sPhysicalPath, sPath);
+		OSE_LOG_WARNING("General", "Couldn't open std::ifstream: % \n\tArgument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::ifstream opened: % \n\Argument path: %", sPhysicalPath, sPath);
+	OSE_LOG_INFO("General", "std::ifstream opened: % \n\tArgument path: %", sPhysicalPath, sPath);
 	return true;
 }
 
@@ -157,11 +155,11 @@ bool CVirtualFileSystem::CreateFileStream(std::string sPath, std::ofstream& fOut
 
 	if (!fOut.is_open())
 	{
-		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: % \n\Argument path: %\n", sPhysicalPath, sPath);
+		OSE_LOG_WARNING("General", "Couldn't open std::ofstream: % \n\tArgument path: %\n", sPhysicalPath, sPath);
 		return false;
 	}
 
-	OSE_LOG_INFO("General", "std::ofstream opened: % \n\Argument path: %\n", sPhysicalPath, sPath);
+	OSE_LOG_INFO("General", "std::ofstream opened: % \n\tArgument path: %\n", sPhysicalPath, sPath);
 	return true;
 }
 

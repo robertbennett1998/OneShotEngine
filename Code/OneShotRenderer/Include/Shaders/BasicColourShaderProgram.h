@@ -19,14 +19,20 @@ class CBasicColourShaderProgram : public OneShotRenderer::IShaderProgram
 
 		bool Initialize() override;
 		void Bind() override;
+		void Update() override;
 		void Resize() override;
 		void Shutdown() override;
+
+		void SetWorldMatrix(DirectX::XMMATRIX xmmWorld);
 
 	private:
 		bool m_bInitialized;
 		OneShotRenderer::IRenderer3D* m_p3DRenderer;
 		OneShotRenderer::IVertexShader* m_pVertexShader;
 		OneShotRenderer::IPixelShader* m_pPixelShader;
+		DirectX::XMMATRIX m_xmmWorldMatrix;
+		DirectX::XMMATRIX m_xmmViewMatrix;
+		DirectX::XMMATRIX m_xmmProjectionMatrix;
 		OneShotRenderer::CShaderParams<DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX>* m_pMatrixBuffer;
 };
 

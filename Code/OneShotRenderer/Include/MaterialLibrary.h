@@ -19,7 +19,7 @@ namespace OneShotRenderer
 			{
 				if (sm_pInstance == nullptr)
 				{
-					sm_pInstance = new CMaterialLibrary(p3DRenderer);
+					sm_pInstance = OSE_NEW_LIFETIME(CMaterialLibrary(p3DRenderer));
 				}
 
 				return sm_pInstance;
