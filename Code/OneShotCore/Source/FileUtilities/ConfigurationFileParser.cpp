@@ -35,7 +35,7 @@ bool CConfigurationFileParser::Load(std::string sFilePath)
 {
 	m_sPhysicalFilePath = CVirtualFileSystem::GetInstance()->ResolvePhysicalPath(sFilePath);
 
-	pugi::xml_parse_result res = m_ConfigDoc.load_file(CVirtualFileSystem::GetInstance()->ResolvePhysicalPath(m_sPhysicalFilePath).c_str(), pugi::parse_trim_pcdata);
+	pugi::xml_parse_result res = m_ConfigDoc.load_file(m_sPhysicalFilePath.c_str(), pugi::parse_trim_pcdata);
 
 	if (res)
 	{
