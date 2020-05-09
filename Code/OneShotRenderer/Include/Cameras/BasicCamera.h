@@ -5,17 +5,18 @@
 #include <DirectXMath.h>
 
 #include "Cameras/Interfaces/ICamera.h"
+#include <OneShotCore/Include/Events/KeyboardInputEventHandler.h>
 
 namespace OneShotRenderer
 {
-	class ONE_SHOT_RENDERER_DLL CBasicCamera : public ICamera
+	class ONE_SHOT_RENDERER_DLL CBasicCamera : public ICamera, public CKeyboardInputEventHandler
 	{
 		public:
 			CBasicCamera();
 			~CBasicCamera();
 
 			bool Initialize() override;
-			void Update() override;
+			void Update(const double dDeltaTime) override;
 			void Shutdown() override;
 
 			void SetCameraPosition(DirectX::XMFLOAT3 xmf3Pos) override;
@@ -29,6 +30,9 @@ namespace OneShotRenderer
 			DirectX::XMFLOAT3 m_xmf3LookAtPos;
 			DirectX::XMFLOAT3 m_xmf3UpDir;
 			DirectX::XMMATRIX m_xmmViewMatrix;
+
+			// Inherited via CKeyboardInputEventHandler
+			virtual void OnKeyboardEvent(UINT uiKey, bool bUp) override;
 	};
 };
 

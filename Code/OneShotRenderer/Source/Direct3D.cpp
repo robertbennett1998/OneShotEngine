@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Direct3D.h"
+#include <OneShotCore/Include/FileUtillities/ConfigurationFileParser.h>
 
 using namespace OneShotRenderer;
 
@@ -31,6 +32,11 @@ bool CDirect3D::Initialize(HWND hWnd, ICamera* pCamera)
 
 		IDXGIDevice* pDxgiDevice = nullptr;
 		if (FAILED(m_pD3D11Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDxgiDevice)))
+			return false;
+
+		DetectHighestMsaaSettings();
+		
+		if (!LoadSettings())
 			return false;
 
 		if (!CreateDXGISwapchain(pDxgiDevice))
@@ -237,6 +243,25 @@ ITexture2D* CDirect3D::CreateTexture2D()
 	return OSE_NEW(CD3D11Texture2D(this));
 }
 
+inline bool CDirect3D::LoadSettings()
+{
+	CGlobalVariables globalEnviroment; //TODO: Get global instance
+	CConfigurationFileParser configFile(&globalEnviroment);
+	if (!configFile.Load("/AppDataStore/Engine.config"))
+		return false;
+	
+	m_uiMsaaCount = (UINT)configFile.Get<int>("Configuration.Renderer.MsaaCount");
+	if (m_uiMsaaCount == 0 || m_uiMsaaCount > m_uiMsaaMaxCount)
+	{
+		m_uiMsaaCount = m_uiMsaaMaxCount;
+		configFile.Set<int>("Configuration.Renderer.MsaaCount", m_uiMsaaCount);
+	}
+
+	m_uiMsaaQuality = GetMsaaQuality(m_uiMsaaCount);
+
+	return true;
+}
+
 inline bool CDirect3D::CreateD3D11Device()
 {
 	if (FAILED(D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, NULL, 0, D3D11_SDK_VERSION, &m_pD3D11Device, NULL, &m_pD3D11DeviceContext)))
@@ -278,8 +303,10 @@ inline bool CDirect3D::CreateDXGISwapchain(IDXGIDevice* pDxgiDevice)
 	RECT rect; ZeroMemory(&rect, sizeof(RECT));
 	GetClientRect(m_hWnd, &rect);
 
+	OSE_LOG_INFO("General", "MSAA settings detected Count: % - Quality: %", m_uiMsaaCount, m_uiMsaaQuality);
+
 	DXGI_SWAP_CHAIN_DESC scd; ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	scd.BufferDesc.Format = m_BackBufferFormat;
 	scd.BufferDesc.Height = rect.bottom - rect.top;
 	scd.BufferDesc.Width = rect.right - rect.left;
 	scd.BufferDesc.RefreshRate.Numerator = 0;
@@ -289,26 +316,20 @@ inline bool CDirect3D::CreateDXGISwapchain(IDXGIDevice* pDxgiDevice)
 	scd.BufferCount = 1;
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	scd.OutputWindow = m_hWnd;
-	scd.SampleDesc.Count = 1;
-	scd.SampleDesc.Quality = 0;
+	scd.SampleDesc.Count = m_uiMsaaCount;
+	scd.SampleDesc.Quality = m_uiMsaaQuality;
 	scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	scd.Windowed = true;
 
 	hRes = pDxgiFactory->CreateSwapChain(m_pD3D11Device, &scd, &m_pDXGISwapChain);
 	if (FAILED(hRes))
 	{
-		pDxgiFactory->Release();
-		pDxgiFactory = nullptr;
-
-		pDxgiDevice->Release();
-		pDxgiDevice = nullptr;
-
+		SafeComRelease(pDxgiFactory);
+		SafeComRelease(pDxgiDevice);
 		return false;
 	}
 
-	pDxgiFactory->Release();
-	pDxgiFactory = nullptr;
-
+	SafeComRelease(pDxgiFactory);
 	return true;
 }
 
@@ -356,8 +377,8 @@ inline bool CDirect3D::CreateD3D11DepthStencilBuffer()
 	dsbd.MipLevels = 1;
 	dsbd.ArraySize = 1;
 	dsbd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsbd.SampleDesc.Count = 1;
-	dsbd.SampleDesc.Quality = 0;
+	dsbd.SampleDesc.Count = m_uiMsaaCount;
+	dsbd.SampleDesc.Quality = m_uiMsaaQuality;
 	dsbd.Usage = D3D11_USAGE_DEFAULT;
 	dsbd.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	dsbd.CPUAccessFlags = 0;
@@ -417,7 +438,7 @@ inline bool CDirect3D::CreateD3D11DepthStencilView()
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC dsvd; ZeroMemory(&dsvd, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 	dsvd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	dsvd.Texture2D.MipSlice = 0;
 
 	hRes = m_pD3D11Device->CreateDepthStencilView(m_pD3D11DepthStencilBuffer, &dsvd, &m_pD3D11DepthStencilView);

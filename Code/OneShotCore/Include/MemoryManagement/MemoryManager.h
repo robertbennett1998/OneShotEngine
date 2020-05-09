@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string>
 #include <map>
+#include <algorithm>
 
 #include "Interfaces/IHeap.h"
 

@@ -54,7 +54,7 @@ IImage* CTgaLoader::Load(std::string sFilePath)
 
 	switch (tgaFile.header.ubyImageType)
 	{
-		default: OSE_DELETE_ARRAY(pFileBuffer); pFileBuffer = nullptr; return false;	
+		default: OSE_DELETE_ARRAY(pFileBuffer); pFileBuffer = nullptr; return nullptr;	
 		//case ImageType::UncompressedColourMappedImage: break;
 		//case ImageType::UncompressedTrueColourImage: break;
 		//case ImageType::UncompressedBlackAndWhiteImage: break;

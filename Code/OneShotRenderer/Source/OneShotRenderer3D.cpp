@@ -35,7 +35,7 @@ bool COneShotRenderer3D::Initialize(HWND hWnd)
 		g_pBasicCamera = OSE_NEW(CBasicCamera());
 		g_pBasicCamera->Initialize();
 
-		g_pBasicCamera->SetCameraPosition(DirectX::XMFLOAT3(0.0f, 1.8f, -12.0f));
+		g_pBasicCamera->SetCameraPosition(DirectX::XMFLOAT3(0.0f, 1.8f, 0.0f));
 		g_pBasicCamera->SetCameraLookAtPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 		if (!m_pRenderer3D->Initialize(hWnd, g_pBasicCamera))
@@ -52,11 +52,12 @@ bool COneShotRenderer3D::Initialize(HWND hWnd)
 	return false;
 }
 
-void COneShotRenderer3D::Update()
+void COneShotRenderer3D::Update(const double dDeltaTime)
 {
 	if (m_bInitialized)
 	{
 		CShaderManager::GetInstance()->Update();
+		g_pBasicCamera->Update(dDeltaTime);
 		m_pRenderer3D->PreDraw();
 		m_pRenderer3D->Draw();
 		m_pRenderer3D->PostDraw();

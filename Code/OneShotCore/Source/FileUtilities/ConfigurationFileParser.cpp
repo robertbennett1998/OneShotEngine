@@ -115,7 +115,7 @@ bool CConfigurationFileParser::Load(std::string sFilePath)
 	}
 	#endif
 
-	return false;
+	return true;
 }
 
 void CConfigurationFileParser::Save()

@@ -45,7 +45,10 @@ class ONE_SHOT_CORE_DLL CConfigurationFileParser
 		T Get(std::string key)
 		{
 			if (m_ConfigItems.find(key) == m_ConfigItems.end())
+			{
 				OSE_LOG_WARNING("General", "Couldn't find config item with the key %", key);
+				return T();
+			}
 
 			return *std::reinterpret_pointer_cast<T>(m_ConfigItems[key].pValue);
 		}

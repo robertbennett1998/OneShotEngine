@@ -15,8 +15,9 @@ static std::string GetFileExtensionFromFilepath(std::string sFilePath)
 		ullLastSlashPos = sFilePath.find_last_of('\\');
 
 		if (ullLastSlashPos == std::string::npos)
-			return false;
+			return NULL;
 	}
+
 	ullLastSlashPos++;
 	std::string sFileExtension;
 	sFileExtension = sFilePath.substr(ullLastSlashPos, sFilePath.length() - ullLastSlashPos);

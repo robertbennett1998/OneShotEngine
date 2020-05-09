@@ -13,6 +13,8 @@
 #define ONE_SHOT_RENDERER_DLL __declspec(dllimport)
 #endif
 
+//#define LOG_FPS
+
 #include <OneShotCore/Include/MemoryManagement/MemoryManager.h>
 #include <OneShotCore/Include/Logging/LoggingManager.h>
 #include <OneShotCore/Include/Logging/Logger.h>
@@ -20,6 +22,10 @@
 #include <OneShotCore/Include/Utillities/GlobalVariables.h>
 #include <OneShotCore/Include/FileUtillities/ConfigurationFileParser.h>
 #include <OneShotCore/Include/Logging/Sinks/FileSink.h>
+#include <OneShotCore/Include/Time/Stopwatch.h>
+#include <OneShotCore/Include/Logging/Sinks/CoutSink.h>
+#include <OneShotCore/Include/Events/KeyboardInputEventManager.h>
+#include <OneShotCore/Include/Events/KeyboardInputEventHandler.h>
 
 #include <OneShotRenderer/Include/OneShotRenderer3D.h>
 #include <OneShotRenderer/Include/Direct3D.h>
@@ -34,7 +40,7 @@
 using namespace OneShotRenderer;
 OneShotRenderer::COneShotRenderer3D* g_pRenderer = nullptr;
 
-class CLumberJack : public IRenderable
+class CLumberJack : public IRenderable, public CKeyboardInputEventHandler
 {
 public:
 	bool Initialize() override;
@@ -52,6 +58,12 @@ private:
 	bool m_bShouldRender;
 	IShaderProgram* m_pShaderProgram;
 	DirectX::XMMATRIX m_xmmWorldMatrix;
+
+	// Inherited via CKeyboardInputEventHandler
+	virtual void OnKeyboardEvent(UINT uiKey, bool bUp) override
+	{
+		OSE_LOG_INFO("General", "Key pressed %% - %%", uiKey, bUp);
+	}
 };
 
 bool CLumberJack::Initialize()
@@ -69,7 +81,6 @@ bool CLumberJack::Initialize()
 		return false;
 
 	m_bShouldRender = true;
-
 }
 
 void CLumberJack::Bind()
@@ -121,17 +132,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uiMsg)
 	{
-	default:
-		break;
+		default:
+			break;
 
-	case WM_EXITSIZEMOVE:
-		if (g_pRenderer)
-			g_pRenderer->Resize();
-		break;
+		case WM_KEYUP:
+		{
+			CKeyboardInputEventManager::GetInstance()->RaiseEvent(wParam, true);
+			break;
+		}
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
+		case WM_KEYDOWN:
+		{
+			CKeyboardInputEventManager::GetInstance()->RaiseEvent(wParam, false);
+			break;
+		}
+
+		case WM_EXITSIZEMOVE:
+			if (g_pRenderer)
+				g_pRenderer->Resize();
+			break;
+
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			break;
 	}
 
 	return DefWindowProc(hWnd, uiMsg, wParam, lParam);
@@ -159,6 +182,7 @@ int main()
 	}
 
 	OSE_ADD_SINK("General", CFileSink::CreateFileSink("/Root/Logs/General.log"));
+	OSE_ADD_SINK("General", CCoutSink::CreateCoutSink());
 
 	HINSTANCE hCurrInstance = GetModuleHandleA(NULL);
 	WNDCLASS wndCls; ZeroMemory(&wndCls, sizeof(WNDCLASS));
@@ -172,7 +196,7 @@ int main()
 	if (FAILED(RegisterClass(&wndCls)))
 		return -1;
 
-	HWND hWnd = CreateWindow(L"renderertest", L"Renderer Test", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, configFile.Get<int>("Configuration.Window.Width"), configFile.Get<int>("Configuration.Window.Height"), NULL, NULL, hCurrInstance, NULL);
+	HWND hWnd = CreateWindow(L"renderertest", L"Renderer Test", WS_OVERLAPPEDWINDOW | WS_VISIBLE, configFile.Get<int>("Configuration.Window.PosX"), configFile.Get<int>("Configuration.Window.PosY"), configFile.Get<int>("Configuration.Window.Width"), configFile.Get<int>("Configuration.Window.Height"), NULL, NULL, hCurrInstance, NULL);
 	if (!hWnd)
 		return -2;
 
@@ -195,14 +219,14 @@ int main()
 	if (!lumberJack.Initialize())
 		return -7;
 
-	lumberJack.SetWorldMatrix(DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	lumberJack.SetWorldMatrix(DirectX::XMMatrixTranslation(0.0f, 0.0f, 10.0f));
 
 	if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&lumberJack))
 		return -8;
 
 	//TODO: Extend the geometry framework to allow different types...
-	//if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/Biped/Biped.obj"))
-	//	return -9;
+	if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/Biped/Biped.obj"))
+		return -9;
 
 	//CBiped biped;
 	//if (!biped.Initialize())
@@ -226,6 +250,11 @@ int main()
 	//OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetHeap("lifetime")->WriteHeapDetailsToString());
 
 	MSG msg; ZeroMemory(&msg, sizeof(MSG));
+	CStopwatch stopwatch;
+	stopwatch.Start();
+	double dPrevTime = stopwatch.GetTimeElapsed();
+	double dPrevSecond = dPrevTime;
+	long long fps = 0;
 	do
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -235,7 +264,27 @@ int main()
 		}
 		else
 		{
-			g_pRenderer->Update();
+			double dCurrTime = stopwatch.GetTimeElapsed();
+			double dt = dCurrTime - dPrevTime;
+			if (dt < 1.0f / 60.0f)
+				continue;
+
+			g_pRenderer->Update(dt);
+
+			dPrevTime = dCurrTime;
+			if (dCurrTime - dPrevSecond > 1)
+			{
+				std::stringstream ss;
+				ss << "FPS: " << fps << " Frame Time (s): " << dt;
+				#ifdef LOG_FPS
+					OSE_DEBUG_LOG_INFO("General", ss.str());
+				#endif
+				SetWindowTextA(hWnd, ss.str().c_str());
+				fps = 0;
+				dPrevSecond = dCurrTime;
+			}
+
+			fps++;
 		}
 
 	} while (msg.message != WM_QUIT);

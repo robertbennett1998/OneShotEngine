@@ -12,7 +12,7 @@ static std::string GetFileNameFromFilepath(std::string sFilePath)
 		ullLastSlashPos = sFilePath.find_last_of('\\');
 
 		if (ullLastSlashPos == std::string::npos)
-			return false;
+			return NULL;
 	}
 	ullLastSlashPos++;
 	std::string sFileName;

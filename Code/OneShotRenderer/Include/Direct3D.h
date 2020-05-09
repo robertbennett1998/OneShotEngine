@@ -20,6 +20,7 @@
 
 namespace OneShotRenderer
 {
+	const UINT UNSUPPORTED_MSAA_COUNT = (UINT)-1;
 	class ONE_SHOT_RENDERER_DLL CDirect3D : public IRenderer3D
 	{
 		public:
@@ -76,9 +77,65 @@ namespace OneShotRenderer
 				return m_pD3D11DeviceContext;
 			}
 
+			UINT GetMsaaCount() const
+			{
+				return m_uiMsaaCount;
+			}
+
+			bool SetMsaaCount(const UINT uiMsaaCount)
+			{
+				UINT uiMsaaQuality = GetMsaaQuality(uiMsaaCount);
+				if (uiMsaaQuality == UNSUPPORTED_MSAA_COUNT)
+					return false;
+
+				m_uiMsaaCount = uiMsaaCount;
+				m_uiMsaaQuality = uiMsaaQuality;
+
+				return true;
+			}
+
+			UINT GetMaxSupportedMsaaCount() const
+			{
+				return m_uiMsaaMaxCount;
+			}
+
+			void DetectHighestMsaaSettings()
+			{
+				HRESULT hRes = S_OK;
+				UINT uiCount = 1;
+				UINT uiQualityLevels = 0;
+				UINT uiPrevQualityLevels = 0;
+
+				do
+				{
+					uiPrevQualityLevels = uiQualityLevels;
+					uiQualityLevels = GetMsaaQuality(uiCount);
+
+					uiCount *= 2;
+				} while (!FAILED(hRes) && uiQualityLevels != UNSUPPORTED_MSAA_COUNT); //run until it fails
+
+				m_uiMsaaMaxCount = uiCount / 4; //div by 2 for the one it failed on and div by 2 because it was multiplied by two after it failed
+			}
+
+			UINT GetMsaaQuality(const UINT uiMsaaCount)
+			{
+				if (uiMsaaCount > D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT)
+					return (UINT)-1;
+
+				HRESULT hRes = S_OK;
+				UINT uiQualityLevels = 0;
+
+				hRes = m_pD3D11Device->CheckMultisampleQualityLevels(m_BackBufferFormat, uiMsaaCount, &uiQualityLevels);
+				if (FAILED(hRes) || uiQualityLevels == 0)
+					return (UINT)-1;
+
+				return uiQualityLevels - 1;
+			}
+
 		private:
 			bool m_bInitialized;
 
+			inline bool LoadSettings();
 			inline bool CreateD3D11Device();
 			inline bool CreateDXGISwapchain(IDXGIDevice* pDxgiDevice);
 			inline bool CreateD3D11RenderTargetView();
@@ -97,6 +154,9 @@ namespace OneShotRenderer
 			ICamera* m_pBoundCamera;
 			float m_fViewPortWidth, m_fViewPortHeight;
 			std::vector<IRenderable*> m_pRenderables;
+			const DXGI_FORMAT m_BackBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+			UINT m_uiMsaaMaxCount, m_uiMsaaCount;
+			UINT m_uiMsaaQuality;
 	};
 };
 

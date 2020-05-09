@@ -13,7 +13,7 @@ namespace OneShotRenderer
 			~COneShotRenderer3D();
 
 			bool Initialize(HWND hWnd);
-			void Update();
+			void Update(const double dDeltaTime);
 			void Resize();
 			void Shutdown();
 

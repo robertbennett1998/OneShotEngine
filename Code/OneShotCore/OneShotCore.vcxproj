@@ -130,21 +130,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\CoreHeaders.h" />
+    <ClInclude Include="Include\Events\Interfaces\IEventManager.h" />
+    <ClInclude Include="Include\Events\KeyboardInputEventHandler.h" />
+    <ClInclude Include="Include\Events\KeyboardInputEventManager.h" />
     <ClInclude Include="Include\FileUtillities\VirtualFileSystem.h" />
     <ClInclude Include="Include\Logging\Logger.h" />
     <ClInclude Include="Include\Logging\LoggingManager.h" />
     <ClInclude Include="Include\Logging\Sinks\FileSink.h" />
     <ClInclude Include="Include\Logging\Sinks\Interfaces\ILogSink.h" />
     <ClInclude Include="Include\Logging\Sinks\VSDebugSink.h" />
+    <ClInclude Include="Include\Logging\Sinks\CoutSink.h" />
     <ClInclude Include="Include\MemoryManagement\FreeAllocationHeap.h" />
     <ClInclude Include="Include\MemoryManagement\Interfaces\IHeap.h" />
     <ClInclude Include="Include\MemoryManagement\MemoryManager.h" />
     <ClInclude Include="Include\Time\Stopwatch.h" />
     <ClInclude Include="Include\Utillities\GlobalVariables.h" />
     <ClInclude Include="Include\FileUtillities\ConfigurationFileParser.h" />
+    <ClInclude Include="Include\Events\Interfaces\IEventHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Events\KeyboardInputEventHandler.cpp" />
     <ClCompile Include="Source\CoreHeaders.cpp" />
+    <ClCompile Include="Source\Events\Interfaces\IEventHandler.cpp" />
+    <ClCompile Include="Source\Events\Interfaces\IEventManager.cpp" />
+    <ClCompile Include="Source\Events\KeyboardInputEventManager.cpp" />
     <ClCompile Include="Source\FileUtilities\ConfigurationFileParser.cpp" />
     <ClCompile Include="Source\FileUtilities\VirtualFileSystem.cpp" />
     <ClCompile Include="Source\Logging\Logger.cpp" />
@@ -152,6 +161,7 @@
     <ClCompile Include="Source\Logging\Sinks\FileSink.cpp" />
     <ClCompile Include="Source\Logging\Sinks\Interfaces\ILogSink.cpp" />
     <ClCompile Include="Source\Logging\Sinks\VSDebugSink.cpp" />
+    <ClCompile Include="Source\Logging\Sinks\CoutSink.cpp" />
     <ClCompile Include="Source\MemoryManagement\FreeAllocationHeap.cpp" />
     <ClCompile Include="Source\MemoryManagement\Interfaces\IHeap.cpp" />
     <ClCompile Include="Source\MemoryManagement\MemoryManager.cpp" />
