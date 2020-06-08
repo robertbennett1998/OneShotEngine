@@ -7,6 +7,7 @@ using namespace OneShotRenderer;
 CBasicCamera::CBasicCamera() :
 	m_bInitialized(false),
 	m_xmf3Pos(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f)),
+	m_xmf3Rotation(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f)),
 	m_xmf3LookAtPos(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)),
 	m_xmf3UpDir(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f)),
 	m_xmmViewMatrix(DirectX::XMMatrixIdentity())
@@ -31,66 +32,90 @@ bool CBasicCamera::Initialize()
 
 void CBasicCamera::Update(const double dDeltaTime)
 {
-	auto keyInputEventManager = CKeyboardInputEventManager::GetInstance();
-	static DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-	static DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	auto* pKeyInputEventManager = CKeyboardInputEventManager::GetInstance();
+	DirectX::XMVECTOR xmvLookAtPosition = DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_xmf3Rotation)));
 
-	static double scale = 1.0f;
-	if (keyInputEventManager->IsKeyPresed(VK_SHIFT))
-		scale = 10.0f;
+	static DirectX::XMVECTOR xmvForward = DirectX::XMVECTOR({ 0.0f, 1.0f, 0.0f });
+	static DirectX::XMVECTOR xmvUp = DirectX::XMVECTOR({ 0.0f, 1.0f, 0.0f });
+	static DirectX::XMVECTOR xmvRight = DirectX::XMVECTOR({ 1.0f, 0.0f, 0.0f });
+	static double dTranslationSpeed = 1.0f;
+	static double dRotationSpeedRadsPerSecond = DirectX::XM_PIDIV4;
+
+
+	if (pKeyInputEventManager->IsKeyPresed(VK_SHIFT))
+	{
+		dTranslationSpeed = 10.0f;
+		dRotationSpeedRadsPerSecond = DirectX::XM_PIDIV2;
+	}
 	else
-		scale = 1.0f;
+	{
+		dTranslationSpeed = 1.0f;
+		dRotationSpeedRadsPerSecond = DirectX::XM_PIDIV4;
+	}
 
 	// W
-	if (keyInputEventManager->IsKeyPresed(0x57))
+	if (pKeyInputEventManager->IsKeyPresed(0x57))
 	{
-		auto translation = DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), -dDeltaTime * scale));
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, translation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(xmvLookAtPosition, dTranslationSpeed * dDeltaTime)));
 	}
 
 	// S
-	if (keyInputEventManager->IsKeyPresed(0x53))
+	if (pKeyInputEventManager->IsKeyPresed(0x53))
 	{
-		auto translation = DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), dDeltaTime * scale));
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, translation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(xmvLookAtPosition, -dTranslationSpeed * dDeltaTime)));
 	}
 
 	// A
-	if (keyInputEventManager->IsKeyPresed(0x41))
+	if (pKeyInputEventManager->IsKeyPresed(0x41))
 	{
-		auto translation = DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMLoadFloat3(&up)), -dDeltaTime * scale));
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, translation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvUp), dTranslationSpeed * dDeltaTime)));
 	}
 
 	// D
-	if (keyInputEventManager->IsKeyPresed(0x44))
+	if (pKeyInputEventManager->IsKeyPresed(0x44))
 	{
-		auto translation = DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMLoadFloat3(&up)), dDeltaTime * scale));
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, translation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvUp), -dTranslationSpeed * dDeltaTime)));
 	}
 
-	if (keyInputEventManager->IsKeyPresed(VK_RIGHT))
+	// Z
+	if (pKeyInputEventManager->IsKeyPresed(0x5A))
 	{
-		auto rotation = DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&up), -DirectX::XM_PIDIV4 * 0.1 * scale * dDeltaTime);
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, rotation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvRight), dTranslationSpeed * dDeltaTime)));
 	}
 
-	if (keyInputEventManager->IsKeyPresed(VK_LEFT))
+	// X
+	if (pKeyInputEventManager->IsKeyPresed(0x58))
 	{
-		auto rotation = DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&up), DirectX::XM_PIDIV4 * 0.1 * scale * dDeltaTime);
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, rotation);
+		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvRight), -dTranslationSpeed * dDeltaTime)));
 	}
 
-	if (keyInputEventManager->IsKeyPresed(VK_UP))
+	if (pKeyInputEventManager->IsKeyPresed(VK_RIGHT))
 	{
-		auto rotation = DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&right), DirectX::XM_PIDIV4 * 0.1 * scale * dDeltaTime);
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, rotation);
+		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvUp, dRotationSpeedRadsPerSecond * dDeltaTime)));
 	}
 
-	if (keyInputEventManager->IsKeyPresed(VK_DOWN))
+	if (pKeyInputEventManager->IsKeyPresed(VK_LEFT))
 	{
-		auto rotation = DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&right), -DirectX::XM_PIDIV4 * 0.1 * scale * dDeltaTime);
-		m_xmmViewMatrix = DirectX::XMMatrixMultiply(m_xmmViewMatrix, rotation);
+		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvUp, -dRotationSpeedRadsPerSecond * dDeltaTime)));
+	}
+
+	if (pKeyInputEventManager->IsKeyPresed(VK_UP))
+	{
+		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvRight, -dRotationSpeedRadsPerSecond * dDeltaTime)));
+	}
+
+	if (pKeyInputEventManager->IsKeyPresed(VK_DOWN))
+	{
+		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvRight, dRotationSpeedRadsPerSecond * dDeltaTime)));
+	}
+
+	if (m_xmf3Rotation.x > DirectX::XM_PIDIV2 - 0.1)
+	{
+		m_xmf3Rotation.x = DirectX::XM_PIDIV2 - 0.1;
+	}
+	else if (m_xmf3Rotation.x < -DirectX::XM_PIDIV2 + 0.1)
+	{
+		m_xmf3Rotation.x = -DirectX::XM_PIDIV2 + 0.1;
 	}
 }
 
@@ -107,25 +132,24 @@ void CBasicCamera::Shutdown()
 void CBasicCamera::SetCameraPosition(DirectX::XMFLOAT3 xmf3Pos)
 {
 	m_xmf3Pos = xmf3Pos;
-	m_xmmViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMLoadFloat3(&m_xmf3Pos)), DirectX::XMLoadFloat3(&m_xmf3UpDir));
 }
 
-void CBasicCamera::SetCameraLookAtPosition(DirectX::XMFLOAT3 xmf3LookatPos)
+void CBasicCamera::SetCameraRotation(DirectX::XMFLOAT3 xmf3Rotation)
 {
-	m_xmf3LookAtPos = xmf3LookatPos;
-	m_xmmViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMLoadFloat3(&m_xmf3Pos)), DirectX::XMLoadFloat3(&m_xmf3UpDir));
+	m_xmf3Rotation = xmf3Rotation;
 }
 
-DirectX::XMMATRIX CBasicCamera::GetViewMatrix() const
+DirectX::XMMATRIX CBasicCamera::GetViewMatrix()
 {
+	m_xmmViewMatrix = DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorAdd(DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&m_xmf3LookAtPos), DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_xmf3Rotation))), DirectX::XMLoadFloat3(&m_xmf3Pos)), DirectX::XMLoadFloat3(&m_xmf3UpDir));
 	return m_xmmViewMatrix;
 }
 
-void OneShotRenderer::CBasicCamera::OnKeyboardEvent(UINT uiKey, bool bUp)
+void CBasicCamera::OnKeyboardEvent(UINT uiKey, bool bUp)
 {
 	if (uiKey == VK_SPACE && bUp == false)
 	{
 		SetCameraPosition(DirectX::XMFLOAT3(0.0f, 1.8f, 0.0f));
-		SetCameraLookAtPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		SetCameraRotation(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 }

@@ -36,7 +36,7 @@ bool COneShotRenderer3D::Initialize(HWND hWnd)
 		g_pBasicCamera->Initialize();
 
 		g_pBasicCamera->SetCameraPosition(DirectX::XMFLOAT3(0.0f, 1.8f, 0.0f));
-		g_pBasicCamera->SetCameraLookAtPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		g_pBasicCamera->SetCameraRotation(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 		if (!m_pRenderer3D->Initialize(hWnd, g_pBasicCamera))
 			return false;
