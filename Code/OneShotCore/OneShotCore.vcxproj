@@ -149,6 +149,8 @@
     <ClInclude Include="Include\Utillities\GlobalVariables.h" />
     <ClInclude Include="Include\FileUtillities\ConfigurationFileParser.h" />
     <ClInclude Include="Include\Events\Interfaces\IEventHandler.h" />
+    <ClInclude Include="Include\Window\Interfaces\IWindow.h" />
+    <ClInclude Include="Include\Window\StandardWin32Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Events\MouseInputEventHandler.cpp" />
@@ -171,6 +173,8 @@
     <ClCompile Include="Source\MemoryManagement\MemoryManager.cpp" />
     <ClCompile Include="Source\Time\Stopwatch.cpp" />
     <ClCompile Include="Source\Utillities\GlobalVariables.cpp" />
+    <ClCompile Include="Source\Window\Interfaces\IWindow.cpp" />
+    <ClCompile Include="Source\Window\StandardWin32Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
