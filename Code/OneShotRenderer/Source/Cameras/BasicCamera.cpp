@@ -2,6 +2,8 @@
 #include "Cameras/BasicCamera.h"
 #include <OneShotCore/Include/Events/KeyboardInputEventManager.h>
 
+#include "OneShotCore/Include/Events/MouseInputEventManager.h"
+
 using namespace OneShotRenderer;
 
 CBasicCamera::CBasicCamera() :
@@ -23,6 +25,7 @@ bool CBasicCamera::Initialize()
 	if (!m_bInitialized)
 	{
 		CKeyboardInputEventManager::GetInstance()->AddEventHandler(this);
+		CMouseInputEventManager::GetInstance()->AddEventHandler(this);
 		m_bInitialized = true;
 		return true;
 	}
@@ -42,7 +45,7 @@ void CBasicCamera::Update(const double dDeltaTime)
 	static double dRotationSpeedRadsPerSecond = DirectX::XM_PIDIV4;
 
 
-	if (pKeyInputEventManager->IsKeyPresed(VK_SHIFT))
+	if (pKeyInputEventManager->IsKeyPressed(VK_SHIFT))
 	{
 		dTranslationSpeed = 10.0f;
 		dRotationSpeedRadsPerSecond = DirectX::XM_PIDIV2;
@@ -54,57 +57,59 @@ void CBasicCamera::Update(const double dDeltaTime)
 	}
 
 	// W
-	if (pKeyInputEventManager->IsKeyPresed(0x57))
+	if (pKeyInputEventManager->IsKeyPressed(0x57))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(xmvLookAtPosition, dTranslationSpeed * dDeltaTime)));
 	}
 
 	// S
-	if (pKeyInputEventManager->IsKeyPresed(0x53))
+	if (pKeyInputEventManager->IsKeyPressed(0x53))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(xmvLookAtPosition, -dTranslationSpeed * dDeltaTime)));
 	}
 
 	// A
-	if (pKeyInputEventManager->IsKeyPresed(0x41))
+	if (pKeyInputEventManager->IsKeyPressed(0x41))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvUp), dTranslationSpeed * dDeltaTime)));
 	}
 
 	// D
-	if (pKeyInputEventManager->IsKeyPresed(0x44))
+	if (pKeyInputEventManager->IsKeyPressed(0x44))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvUp), -dTranslationSpeed * dDeltaTime)));
 	}
 
 	// Z
-	if (pKeyInputEventManager->IsKeyPresed(0x5A))
+	if (pKeyInputEventManager->IsKeyPressed(0x5A))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvRight), dTranslationSpeed * dDeltaTime)));
 	}
 
 	// X
-	if (pKeyInputEventManager->IsKeyPresed(0x58))
+	if (pKeyInputEventManager->IsKeyPressed(0x58))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Pos, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Pos), DirectX::XMVectorScale(DirectX::XMVector3Cross(xmvLookAtPosition, xmvRight), -dTranslationSpeed * dDeltaTime)));
 	}
 
-	if (pKeyInputEventManager->IsKeyPresed(VK_RIGHT))
+	//E
+	if (pKeyInputEventManager->IsKeyPressed(VK_RIGHT) || pKeyInputEventManager->IsKeyPressed(0x45))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvUp, dRotationSpeedRadsPerSecond * dDeltaTime)));
 	}
 
-	if (pKeyInputEventManager->IsKeyPresed(VK_LEFT))
+	//Q
+	if (pKeyInputEventManager->IsKeyPressed(VK_LEFT) || pKeyInputEventManager->IsKeyPressed(0x51))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvUp, -dRotationSpeedRadsPerSecond * dDeltaTime)));
 	}
 
-	if (pKeyInputEventManager->IsKeyPresed(VK_UP))
+	if (pKeyInputEventManager->IsKeyPressed(VK_UP))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvRight, -dRotationSpeedRadsPerSecond * dDeltaTime)));
 	}
 
-	if (pKeyInputEventManager->IsKeyPresed(VK_DOWN))
+	if (pKeyInputEventManager->IsKeyPressed(VK_DOWN))
 	{
 		DirectX::XMStoreFloat3(&m_xmf3Rotation, DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&m_xmf3Rotation), DirectX::XMVectorScale(xmvRight, dRotationSpeedRadsPerSecond * dDeltaTime)));
 	}
@@ -124,6 +129,7 @@ void CBasicCamera::Shutdown()
 	if (m_bInitialized)
 	{
 		CKeyboardInputEventManager::GetInstance()->RemoveEventHandler(this);
+		CMouseInputEventManager::GetInstance()->RemoveEventHandler(this);
 		m_xmmViewMatrix = DirectX::XMMatrixIdentity();
 		m_bInitialized = false;
 	}
@@ -145,11 +151,19 @@ DirectX::XMMATRIX CBasicCamera::GetViewMatrix()
 	return m_xmmViewMatrix;
 }
 
-void CBasicCamera::OnKeyboardEvent(UINT uiKey, bool bUp)
+void CBasicCamera::OnKeyEvent(UINT uiKey, bool bUp)
 {
 	if (uiKey == VK_SPACE && bUp == false)
 	{
 		SetCameraPosition(DirectX::XMFLOAT3(0.0f, 1.8f, 0.0f));
 		SetCameraRotation(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	}
+}
+
+void CBasicCamera::OnMouseMoveEvent(UINT uiNewX, UINT uiNewY, UINT uiPrevX, UINT uiPrevY)
+{
+	if (CMouseInputEventManager::GetInstance()->GetRightMouseButtonDown())
+	{
+		OSE_LOG_INFO("General", "Mouse Moved - New Pos (%, %) - Old Pos (%, %)", uiNewX, uiNewY, uiPrevX, uiPrevY);
 	}
 }

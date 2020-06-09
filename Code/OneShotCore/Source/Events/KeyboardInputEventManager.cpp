@@ -1,5 +1,6 @@
 #include "CoreHeaders.h"
 #include "Events/KeyboardInputEventManager.h"
+#include "Events/KeyboardInputEventHandler.h"
 
 CKeyboardInputEventManager* CKeyboardInputEventManager::s_pInstance = nullptr;
 
@@ -11,7 +12,7 @@ CKeyboardInputEventManager::~CKeyboardInputEventManager()
 {
 }
 
-bool CKeyboardInputEventManager::IsKeyPresed(UINT uiKeyCode)
+bool CKeyboardInputEventManager::IsKeyPressed(UINT uiKeyCode)
 {
 	if (m_Keys.contains(uiKeyCode))
 		return m_Keys[uiKeyCode] == false;
@@ -19,12 +20,12 @@ bool CKeyboardInputEventManager::IsKeyPresed(UINT uiKeyCode)
 	return false;
 }
 
-void CKeyboardInputEventManager::RaiseEvent(UINT uiKey, bool bUp)
+void CKeyboardInputEventManager::RaiseKeyEvent(UINT uiKey, bool bUp)
 {
 	m_Keys[uiKey] = bUp;
 
 	for (auto pEventHandler : m_pEventHandlers)
-		pEventHandler->OnKeyboardEvent(uiKey, bUp);
+		pEventHandler->OnKeyEvent(uiKey, bUp);
 }
 
 bool CKeyboardInputEventManager::AddEventHandler(CKeyboardInputEventHandler* pEventHandler)

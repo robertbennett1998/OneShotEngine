@@ -3,9 +3,10 @@
 #define ONE_SHOT_CORE_KEYBOARD_INPUT_EVENT_MANAGER_H
 
 #include "Interfaces/IEventManager.h"
-#include "KeyboardInputEventHandler.h"
 
-class ONE_SHOT_CORE_DLL CKeyboardInputEventManager : public IEventManager<CKeyboardInputEventHandler, UINT, bool>
+class CKeyboardInputEventHandler;
+
+class ONE_SHOT_CORE_DLL CKeyboardInputEventManager : public IEventManager<CKeyboardInputEventHandler>
 {
 	public:
 		static CKeyboardInputEventManager* GetInstance()
@@ -15,13 +16,13 @@ class ONE_SHOT_CORE_DLL CKeyboardInputEventManager : public IEventManager<CKeybo
 
 			return s_pInstance;
 		}
-
-		virtual bool IsKeyPresed(UINT uiKeyCode);
+	
+		virtual bool IsKeyPressed(UINT uiKeyCode);
+		virtual void RaiseKeyEvent(UINT uiKey, bool bUp);
 
 		// Inherited via IEventManager
-		virtual void RaiseEvent(UINT uiKey, bool bUp) override;
-		virtual bool AddEventHandler(CKeyboardInputEventHandler* pEventHandler) override;
-		virtual bool RemoveEventHandler(CKeyboardInputEventHandler* pEventHandler) override;
+		bool AddEventHandler(CKeyboardInputEventHandler* pEventHandler) override;
+		bool RemoveEventHandler(CKeyboardInputEventHandler* pEventHandler) override;
 
 	private:
 		CKeyboardInputEventManager();

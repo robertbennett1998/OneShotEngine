@@ -6,10 +6,11 @@
 
 #include "Cameras/Interfaces/ICamera.h"
 #include <OneShotCore/Include/Events/KeyboardInputEventHandler.h>
+#include "OneShotCore/Include/Events/MouseInputEventHandler.h"
 
 namespace OneShotRenderer
 {
-	class ONE_SHOT_RENDERER_DLL CBasicCamera : public ICamera, public CKeyboardInputEventHandler
+	class ONE_SHOT_RENDERER_DLL CBasicCamera : public ICamera, public CKeyboardInputEventHandler, public CMouseInputEventHandler
 	{
 	public:
 		CBasicCamera();
@@ -33,7 +34,11 @@ namespace OneShotRenderer
 		DirectX::XMMATRIX m_xmmViewMatrix;
 
 		// Inherited via CKeyboardInputEventHandler
-		virtual void OnKeyboardEvent(UINT uiKey, bool bUp) override;
+		void OnKeyEvent(UINT uiKey, bool bUp) override;
+		void OnMouseMoveEvent(UINT uiNewX, UINT uiNewY, UINT uiPrevX, UINT uiPrevY) override;
+		void OnMiddleMouseButtonEvent(UINT uiX, UINT uiY, bool bDown) override {};
+		void OnRightMouseButtonEvent(UINT uiX, UINT uiY, bool bDown) override {};
+		void OnLeftMouseButtonEvent(UINT uiX, UINT uiY, bool bDown) override {};
 	};
 };
 

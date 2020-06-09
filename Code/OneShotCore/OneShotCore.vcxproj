@@ -133,6 +133,8 @@
     <ClInclude Include="Include\Events\Interfaces\IEventManager.h" />
     <ClInclude Include="Include\Events\KeyboardInputEventHandler.h" />
     <ClInclude Include="Include\Events\KeyboardInputEventManager.h" />
+    <ClInclude Include="Include\Events\MouseInputEventHandler.h" />
+    <ClInclude Include="Include\Events\MouseInputEventManager.h" />
     <ClInclude Include="Include\FileUtillities\VirtualFileSystem.h" />
     <ClInclude Include="Include\Logging\Logger.h" />
     <ClInclude Include="Include\Logging\LoggingManager.h" />
@@ -149,6 +151,8 @@
     <ClInclude Include="Include\Events\Interfaces\IEventHandler.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Events\MouseInputEventHandler.cpp" />
+    <ClCompile Include="Source\Events\MouseInputEventManager.cpp" />
     <ClCompile Include="Source\Events\KeyboardInputEventHandler.cpp" />
     <ClCompile Include="Source\CoreHeaders.cpp" />
     <ClCompile Include="Source\Events\Interfaces\IEventHandler.cpp" />

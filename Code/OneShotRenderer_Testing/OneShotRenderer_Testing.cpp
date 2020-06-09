@@ -15,6 +15,7 @@
 
 //#define LOG_FPS
 
+#include <Windowsx.h>
 #include <OneShotCore/Include/MemoryManagement/MemoryManager.h>
 #include <OneShotCore/Include/Logging/LoggingManager.h>
 #include <OneShotCore/Include/Logging/Logger.h>
@@ -34,8 +35,8 @@
 #include <OneShotRenderer/Include/GeometryManager.h>
 #include <OneShotRenderer/Include/Shaders/BasicTextureShaderProgram.h>
 #include <OneShotRenderer/Include/Shaders/ShaderManager.h>
-#include <OneShotRenderer/Include/Shaders/BasicColourShaderProgram.h>
-#include <OneShotRenderer/Include/Renderables/Biped.h>
+
+#include "OneShotCore/Include/Events/MouseInputEventManager.h"
 
 using namespace OneShotRenderer;
 OneShotRenderer::COneShotRenderer3D* g_pRenderer = nullptr;
@@ -60,7 +61,7 @@ private:
 	DirectX::XMMATRIX m_xmmWorldMatrix;
 
 	// Inherited via CKeyboardInputEventHandler
-	virtual void OnKeyboardEvent(UINT uiKey, bool bUp) override
+	virtual void OnKeyEvent(UINT uiKey, bool bUp) override
 	{
 		OSE_LOG_INFO("General", "Key pressed %% - %%", uiKey, bUp);
 	}
@@ -135,15 +136,57 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uiMsg, WPARAM wParam, LPARAM lParam)
 		default:
 			break;
 
+		case WM_MOUSEMOVE:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseMouseMoveEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+			break;
+		}
+
+		case WM_LBUTTONDOWN:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseLeftMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+			break;
+		}
+
+		case WM_LBUTTONUP:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseLeftMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+			break;
+		}
+
+		case WM_MBUTTONDOWN:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseMiddleMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+			break;
+		}
+
+		case WM_MBUTTONUP:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseMiddleMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+			break;
+		}
+
+		case WM_RBUTTONDOWN:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseRightMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+			break;
+		}
+
+		case WM_RBUTTONUP:
+		{
+			CMouseInputEventManager::GetInstance()->RaiseRightMouseButtonEvent(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+			break;
+		}
+		
 		case WM_KEYUP:
 		{
-			CKeyboardInputEventManager::GetInstance()->RaiseEvent(wParam, true);
+			CKeyboardInputEventManager::GetInstance()->RaiseKeyEvent(wParam, true);
 			break;
 		}
 
 		case WM_KEYDOWN:
 		{
-			CKeyboardInputEventManager::GetInstance()->RaiseEvent(wParam, false);
+			CKeyboardInputEventManager::GetInstance()->RaiseKeyEvent(wParam, false);
 			break;
 		}
 
@@ -182,7 +225,7 @@ int main()
 	}
 
 	OSE_ADD_SINK("General", CFileSink::CreateFileSink("/Root/Logs/General.log"));
-	OSE_ADD_SINK("General", CCoutSink::CreateCoutSink());
+	//OSE_ADD_SINK("General", CCoutSink::CreateCoutSink());
 
 	HINSTANCE hCurrInstance = GetModuleHandleA(NULL);
 	WNDCLASS wndCls; ZeroMemory(&wndCls, sizeof(WNDCLASS));
@@ -290,7 +333,7 @@ int main()
 	} while (msg.message != WM_QUIT);
 
 	OSE_SAFE_SHUTDOWN(g_pRenderer);
-
+	
 	OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetRootHeap()->WriteHeapDetailsToString());
 	//OSE_LOG_INFO("Memory", CMemoryManager::GetInstance()->GetHeap("lifetime")->WriteHeapDetailsToString());
 }

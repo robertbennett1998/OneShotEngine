@@ -4,11 +4,10 @@
 
 #include "IEventHandler.h"
 
-template <class T, class ...U>
+template <class T>
 class ONE_SHOT_CORE_DLL IEventManager
 {
 	public:
-		virtual void RaiseEvent(U... params) = 0;
 		virtual bool AddEventHandler(T* pEventHandler) = 0;
 		virtual bool RemoveEventHandler(T* pEventHandler) = 0;
 };
