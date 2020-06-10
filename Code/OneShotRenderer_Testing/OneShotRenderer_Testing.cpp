@@ -82,6 +82,7 @@ bool CLumberJack::Initialize()
 		return false;
 
 	m_bShouldRender = true;
+	return true;
 }
 
 void CLumberJack::Bind()

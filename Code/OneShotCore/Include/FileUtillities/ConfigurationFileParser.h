@@ -10,7 +10,7 @@ class ONE_SHOT_CORE_DLL CConfigurationFileParser
 		struct ConfigItem
 		{
 			bool bIsCVar;
-			std::string sType;
+			std::string sType ;
 			std::shared_ptr<char> pValue;
 		};
 
