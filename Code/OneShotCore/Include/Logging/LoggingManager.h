@@ -61,10 +61,23 @@ class ONE_SHOT_CORE_DLL CLoggingManager
 		std::shared_ptr<CLogger> CreateLogger(std::string sLoggerName);
 		std::shared_ptr<CLogger> GetLogger(std::string sLoggerName) const;
 		bool RemoveLogger(std::string sLoggerName);
-		
 
+		const std::string GetNullLoggerName() const
+		{
+			return m_sNullLoggerName;
+		}
+
+		const std::string GetGeneralLoggerName() const
+		{
+			return m_sGeneralLoggerName;
+		}
+	
 	private:
+		CLoggingManager(const std::string sNullLoggerName, const std::string sGeneralLoggerName);
+	
 		static CLoggingManager* sm_pInstance;
+		const std::string m_sNullLoggerName;
+		const std::string m_sGeneralLoggerName;
 
 		std::map<std::string, std::shared_ptr<CLogger>> m_Loggers;
 };

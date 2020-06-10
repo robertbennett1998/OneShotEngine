@@ -37,6 +37,9 @@
 #include <OneShotRenderer/Include/Shaders/ShaderManager.h>
 
 #include "OneShotCore/Include/Events/MouseInputEventManager.h"
+#include "OneShotCore/Include/Logging/Sinks/VSDebugSink.h"
+#include "Renderables/Biped.h"
+#include "Shaders/BasicColourShaderProgram.h"
 
 using namespace OneShotRenderer;
 OneShotRenderer::COneShotRenderer3D* g_pRenderer = nullptr;
@@ -225,9 +228,15 @@ int main()
 		}
 	}
 
+
 	OSE_ADD_SINK("General", CFileSink::CreateFileSink("/Root/Logs/General.log"));
 	//OSE_ADD_SINK("General", CCoutSink::CreateCoutSink());
 
+	OSE_CREATE_LOGGER("Renderer");
+	OSE_ADD_SINK("Renderer", CFileSink::CreateFileSink("/Root/Logs/Renderer.log"));
+	OSE_ADD_SINK("Renderer", CVSDebugSink::CreateVSDebugSink());
+	OSE_ADD_SINK("Renderer", CCoutSink::CreateCoutSink());
+	
 	HINSTANCE hCurrInstance = GetModuleHandleA(NULL);
 	WNDCLASS wndCls; ZeroMemory(&wndCls, sizeof(WNDCLASS));
 	wndCls.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
@@ -253,7 +262,7 @@ int main()
 	if (!CShaderManager::GetInstance()->RegisterShaderType<CBasicTextureShaderProgram>("BasicTexture"))
 		return -4;
 
-	if (!OneShotRenderer::CMaterialLibrary::GetInstance()->RegisterMaterials("/Geometry/LumberJack/lumberJack.mtl"))
+	if (!CMaterialLibrary::GetInstance()->RegisterMaterials("/Geometry/LumberJack/lumberJack.mtl"))
 		return -5;
 
 	if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/LumberJack/lumberJack.obj"))
@@ -272,14 +281,17 @@ int main()
 	if (!CGeometryManager::GetInstance()->RegisterGeometry("/Geometry/Biped/Biped.obj"))
 		return -9;
 
-	//CBiped biped;
-	//if (!biped.Initialize())
-	//	return -10;
+	if (!CShaderManager::GetInstance()->RegisterShaderType<CBasicColourShaderProgram>("BasicColour"))
+		return -10;
+	
+	CBiped biped;
+	if (!biped.Initialize())
+		return -11;
 
-	//biped.SetWorldMatrix(DirectX::XMMatrixTranslation(3.0f, 0.0f, 0.0f));
+	biped.SetWorldMatrix(DirectX::XMMatrixTranslation(3.0f, 0.0f, 0.0f));
 
-	//if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&biped))
-	//	return -11;
+	if (!g_pRenderer->Get3DRenderer()->RegisterRenderable(&biped))
+		return -12;
 
 	//CBiped biped2;
 	//if (!biped2.Initialize())

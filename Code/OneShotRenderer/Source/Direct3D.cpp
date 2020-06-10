@@ -84,6 +84,7 @@ bool CDirect3D::Initialize(HWND hWnd, ICamera* pCamera)
 
 void CDirect3D::PreDraw()
 {
+	OSE_LOG_INFO("Renderer", "Frame Start");
 	static float rgba[4] = { 0, 1, 0, 1 };
 	m_pD3D11DeviceContext->ClearRenderTargetView(m_pD3D11RenderTargetView, rgba);
 	m_pD3D11DeviceContext->ClearDepthStencilView(m_pD3D11DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -94,6 +95,7 @@ void CDirect3D::Draw()
 {
 	for (uint64_t i = 0; i < m_pRenderables.size(); i++)
 	{
+		OSE_LOG_INFO("Renderer", "Drawing %", m_pRenderables[i]->GetGeometry()->GetGeometryName());
 		if (m_pRenderables[i]->GetShouldRender())
 		{
 			m_pRenderables[i]->Bind();
@@ -110,6 +112,7 @@ void CDirect3D::Draw()
 void CDirect3D::PostDraw()
 {
 	m_pDXGISwapChain->Present(0, 0);
+	OSE_LOG_INFO("Renderer", "Frame End\n-----------------------------");
 }
 
 void CDirect3D::Resize()

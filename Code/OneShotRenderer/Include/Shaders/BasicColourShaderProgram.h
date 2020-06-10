@@ -11,7 +11,7 @@
 #include "Interfaces/IRenderer3D.h"
 #include "Shaders/ShaderParams.h"
 
-class CBasicColourShaderProgram : public OneShotRenderer::IShaderProgram
+class ONE_SHOT_RENDERER_DLL CBasicColourShaderProgram : public OneShotRenderer::IShaderProgram
 {
 	public:
 		CBasicColourShaderProgram(OneShotRenderer::IRenderer3D* p3DRenderer);

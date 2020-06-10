@@ -68,7 +68,11 @@ namespace OneShotRenderer
 				return m_ullVertexCount;
 			}
 
-
+			const std::string GetGeometryName() const
+			{
+				return m_sGeomName;
+			}
+		
 		private:
 			CGeometry();
 			~CGeometry();
